@@ -1,13 +1,13 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 
-import { EmailValidationPipe } from './pipes/email-validation.pipe';
-import { UsersService } from './users.service';
+import { UserService } from './user.service';
+import { EmailValidationPipe } from 'src/common/pipe/email-validation.pipe';
 
 
 @Controller('users')
-export class UsersController {
-  constructor(private readonly userService: UsersService) {}
+export class UserController {
+  constructor(private readonly userService: UserService) {}
 
   @Get('')
   async findAll(): Promise<any[]> {

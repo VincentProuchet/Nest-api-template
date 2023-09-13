@@ -19,7 +19,7 @@ const users: any[] = [
 ]
 
 @Injectable()
-export class UsersService {
+export class UserService {
   async getAll(): Promise<any[]> {
     return users;
   }
