@@ -37,3 +37,9 @@ lerna-debug.log*
 # yarn
 .yarn/releases
 .yarn/cache
+
+# dotenv
+environments/*.env
+environments/.env*
+environments/*.env*
+!environments/.env
