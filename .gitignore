@@ -38,3 +38,8 @@ lerna-debug.log*
 # yarn
 .yarn/releases
 .yarn/cache
+
+#draw.io
+
+*.bkp
+*.dtmp
