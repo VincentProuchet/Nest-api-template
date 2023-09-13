@@ -1,15 +1,15 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 
+import { EmailValidationPipe } from '../common/pipe/email-validation.pipe';
 import { UserService } from './user.service';
-import { EmailValidationPipe } from 'src/common/pipe/email-validation.pipe';
 
 
-@Controller('users')
+@Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get('')
+  @Get('all')
   async findAll(): Promise<any[]> {
     return await this.userService.getAll();
   }
