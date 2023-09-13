@@ -19,8 +19,8 @@ export class UserController {
     return await this.userService.getById(userId);
   }
 
-  @Post('/byEmail')
   @HttpCode(HttpStatus.OK)
+  @Post('/byEmail')
   async findByEmail(@Body('email', EmailValidationPipe) userEmail: string): Promise<any> {
     return await this.userService.getByEmail(userEmail);
   }
