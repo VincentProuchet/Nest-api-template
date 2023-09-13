@@ -1,11 +1,15 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { RegisterDto } from 'src/common/dto/authentication/register.dto';
 import { LoginDto } from 'src/common/dto/authentication/login.dto';
 import { UserService } from '../user/user.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthenticationService {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly jwtService: JwtService
+  ) {}
 
   async register(userInfo: RegisterDto): Promise<any> {
     return this.userService.create(userInfo);
@@ -13,13 +17,14 @@ export class AuthenticationService {
 
   async login(userInfo: LoginDto): Promise<any> {
     const foundUser: any = await this.userService.getByEmail(userInfo.email);
-    if (foundUser != undefined && this.validatePwd(userInfo.password, foundUser.password))
-      return foundUser; // return JWT
-    else
-      throw new BadRequestException("Wrong email or password");
-  }
+    if (foundUser?.password !== userInfo.password)
+      throw new UnauthorizedException("Wrong email or password");
 
-  private validatePwd(input: string, userPwd: string) {
-    return input === userPwd;
+    const payload = { sub: foundUser.id, username: foundUser.email };
+    const response = {
+      access_token: await this.jwtService.signAsync(payload, { secret: process.env.JWT_SECRET, expiresIn: process.env.JWT_EXPIRE}),
+    }
+
+    return response;
   }
 }

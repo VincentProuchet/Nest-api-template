@@ -20,7 +20,7 @@ export class UserController {
   }
 
   @Post('/byEmail')
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   async findByEmail(@Body('email', EmailValidationPipe) userEmail: string): Promise<any> {
     return await this.userService.getByEmail(userEmail);
   }
