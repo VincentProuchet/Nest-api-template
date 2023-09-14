@@ -4,11 +4,9 @@ import { Request, Response } from 'express';
 import { EmailValidationPipe } from '../common/pipe/email-validation.pipe';
 import { UserService } from './user.service';
 
-
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
-
+  constructor(private readonly userService: UserService) { }
   @Get('all')
   async findAll(): Promise<any[]> {
     return await this.userService.getAll();
@@ -16,9 +14,9 @@ export class UserController {
 
   @Get('/byId/:id')
   async findById(@Param('id', ParseIntPipe) userId: number): Promise<any> {
-    return await this.userService.getById(userId);
+      return await this.userService.getById(userId);
   }
-
+  
   @HttpCode(HttpStatus.OK)
   @Post('/byEmail')
   async findByEmail(@Body('email', EmailValidationPipe) userEmail: string): Promise<any> {

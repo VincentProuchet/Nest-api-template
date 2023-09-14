@@ -33,6 +33,7 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+.editorconfig
 
 # yarn
 .yarn/releases
@@ -43,3 +44,7 @@ environments/*.env
 environments/.env*
 environments/*.env*
 !environments/.env
+
+#draw.io
+*.bkp
+*.dtmp
