@@ -1,45 +1,46 @@
 import { Injectable } from '@nestjs/common';
 import { RegisterDto } from 'src/common/dto/authentication/register.dto';
-
-const users: any[] = [
-  {
-    id: 1,
-    email: 'foo1@bar.fr',
-    password: 'test123',
-  },
-  {
-    id: 2,
-    email: 'foo2@bar.com',
-    password: 'test123',
-  },
-  {
-    id: 3,
-    email: 'foo3@bar.org',
-    password: 'test123',
-  },
-];
+import { UserGetDto } from 'src/common/dto/user/uset-get.dto';
 
 @Injectable()
 export class UserService {
-  async getAll(): Promise<any[]> {
-    return users;
+  users: UserGetDto[] = [
+    {
+      id: 1,
+      email: 'foo1@bar.fr',
+      password: 'test123',
+    },
+    {
+      id: 2,
+      email: 'foo2@bar.com',
+      password: 'test123',
+    },
+    {
+      id: 3,
+      email: 'foo3@bar.org',
+      password: 'test123',
+    },
+  ];
+
+  async getAll(): Promise<UserGetDto[]> {
+    return this.users;
   }
 
-  async getById(userId: number): Promise<any> {
-    return users.find((el) => el.id === userId);
+  async getById(userId: number): Promise<UserGetDto | undefined> {
+    return this.users.find((el) => el.id === userId);
   }
 
-  async getByEmail(userEmail: string): Promise<any> {
-    return users.find((el) => el.email === userEmail);
+  async getByEmail(userEmail: string): Promise<UserGetDto | undefined> {
+    return this.users.find((el) => el.email === userEmail);
   }
 
-  async create(userInfo: RegisterDto): Promise<any> {
+  async create(userInfo: RegisterDto): Promise<UserGetDto> {
     const newUser = {
-      ...{ id: users[users.length - 1].id + 1 },
+      ...{ id: this.users[this.users.length - 1].id + 1 },
       ...userInfo,
     };
 
-    users.push(newUser);
+    this.users.push(newUser);
 
     return newUser;
   }
