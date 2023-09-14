@@ -1,10 +1,10 @@
 import { ArgumentMetadata, BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
+import { isEmail } from 'class-validator';
 
 @Injectable()
 export class EmailValidationPipe implements PipeTransform<string, string> {
   transform(value: string, metadata: ArgumentMetadata) {
-    const re = /^[a-zA-Z\d]{1,30}[-.]{0,1}[a-zA-Z\d]{1,30}@[a-zA-Z\d]{1,30}-{0,1}[a-zA-Z\d]{1,30}.[a-z0-9]{2,6}$/;
-    if (!re.test(value))
+    if (!isEmail(value))
       throw new BadRequestException('Validation failed (valid email format is expected)');
 
     return value;

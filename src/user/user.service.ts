@@ -1,20 +1,21 @@
 import { Injectable } from '@nestjs/common';
+import { RegisterDto } from 'src/common/dto/authentication/register.dto';
 
 const users: any[] = [
   {
     'id': 1,
-    'username': "Alain Dupont",
-    'email': "dupont.alain@test.fr"
+    'email': "foo1@bar.fr",
+    'password': "test123"
   },
   {
     'id': 2,
-    'username': "Stéphane Durant",
-    'email': "durant.stephane@test.fr"
+    'email': "foo2@bar.com",
+    'password': "test123"
   },
   {
     'id': 3,
-    'username': "Marie Test",
-    'email': "durant.stephane@test.fr"
+    'email': "foo3@bar.org",
+    'password': "test123"
   }
 ]
 
@@ -30,5 +31,16 @@ export class UserService {
 
   async getByEmail(userEmail: string): Promise<any> {
     return users.find((el) => el.email === userEmail);
+  }
+
+  async create(userInfo: RegisterDto): Promise<any> {
+    let newUser = {
+      ...{id: users[users.length -1].id + 1},
+      ...userInfo
+    };
+
+    users.push(newUser);
+
+    return newUser;
   }
 }

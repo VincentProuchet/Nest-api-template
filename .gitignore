@@ -39,7 +39,12 @@ lerna-debug.log*
 .yarn/releases
 .yarn/cache
 
-#draw.io
+# dotenv
+environments/*.env
+environments/.env*
+environments/*.env*
+!environments/.env
 
+#draw.io
 *.bkp
 *.dtmp
