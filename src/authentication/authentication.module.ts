@@ -20,6 +20,6 @@ import { AuthenticationGuard } from './authentication.guard';
       provide: APP_GUARD,
       useClass: AuthenticationGuard,
     },
-  ]
+  ],
 })
 export class AuthenticationModule {}
