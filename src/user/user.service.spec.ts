@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
-import { UserGetDto } from 'src/common/dto/user/uset-get.dto';
-import { RegisterDto } from 'src/common/dto/authentication/register.dto';
+import { RegisterDto } from '../authentication/dto/register.dto';
+import { UserGetDto } from './dto/uset-get.dto';
 
 describe('UserService', () => {
   let userService: UserService;

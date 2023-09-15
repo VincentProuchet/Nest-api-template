@@ -1,7 +1,7 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
-import { RegisterDto } from '../common/dto/authentication/register.dto';
-import { LoginDto } from '../common/dto/authentication/login.dto';
+import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
 import { AllowAnonymous } from '../common/decorator/allow-anonymous.decorator';
 
 @Controller('auth')
