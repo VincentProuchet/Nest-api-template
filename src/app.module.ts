@@ -28,6 +28,11 @@ import { UserEntity } from './user/repositories/user.entity';
         entities: [
           UserEntity,
         ],
+        migrations: ['../typeorm_migrations/*{.ts,.js}'],
+        cli: {
+          migrationsDir: 'src/migration'
+        },
+        migrationsTableName: "migrations_history",
       }),
     }),
     UserModule,

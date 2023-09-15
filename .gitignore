@@ -40,7 +40,10 @@ lerna-debug.log*
 .yarn/cache
 
 # dotenv
-environments
+environments/*.env
+environments/.env*
+environments/*.env*
+!.env.template
 
 #draw.io
 *.bkp

@@ -11,7 +11,7 @@ import {
 
 import { EmailValidationPipe } from '../common/pipe/email-validation.pipe';
 import { UserService } from './user.service';
-import { UserGetDto } from './dto/uset-get.dto';
+import { UserGetDto } from './dto/user-get.dto';
 
 @Controller('user')
 export class UserController {

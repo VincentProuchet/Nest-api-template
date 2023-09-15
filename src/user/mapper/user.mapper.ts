@@ -1,4 +1,4 @@
-import { UserGetDto } from "../dto/uset-get.dto";
+import { UserGetDto } from "../dto/user-get.dto";
 import { UserEntity } from "../repositories/user.entity";
 
 export class UserMapper {
