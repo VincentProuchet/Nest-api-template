@@ -11,5 +11,6 @@ async function bootstrapApp() {
     }),
   );
   await app.listen(3000);
+  console.log(process.env.NODE_ENV);
 }
 bootstrapApp();
