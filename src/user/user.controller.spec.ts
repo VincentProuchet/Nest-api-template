@@ -21,8 +21,7 @@ describe('UserController', () => {
     it('should return an array of UserGetDto', async () => {
       const result: UserGetDto[] = [{
         id: 1,
-        email: 'foo@bar.com',
-        password: 'foobar'
+        email: 'foo@bar.com'
       }];
       jest.spyOn(userService, 'getAll').mockImplementation(async () => result);
 
@@ -40,16 +39,15 @@ describe('UserController', () => {
     it('should return the UserGetDto with specified id', async () => {
       const result: UserGetDto = {
         id: 1,
-        email: 'foo@bar.com',
-        password: 'foobar'
+        email: 'foo@bar.com'
       };
       jest.spyOn(userService, 'getById').mockImplementation(async () => result);
       expect(await userController.findById(1)).toBe<UserGetDto>(result);
     });
-    it('should return undefined if not found', async () => {
-      const result: UserGetDto | undefined = undefined;
+    it('should return null if not found', async () => {
+      const result: UserGetDto | null = null;
       jest.spyOn(userService, 'getById').mockImplementation(async () => result);
-      expect(await userController.findById(1)).toBe<undefined>(result);
+      expect(await userController.findById(1)).toBe<null>(result);
     });
   });
 
@@ -57,16 +55,15 @@ describe('UserController', () => {
     it('should return the UserGetDto with specified email', async () => {
       const result: UserGetDto = {
         id: 1,
-        email: 'foo@bar.com',
-        password: 'foobar'
+        email: 'foo@bar.com'
       };
       jest.spyOn(userService, 'getByEmail').mockImplementation(async () => result);
       expect(await userController.findByEmail('foo@bar.com')).toBe<UserGetDto>(result);
     });
-    it('should return undefined if not found', async () => {
-      const result: UserGetDto | undefined = undefined;
+    it('should return null if not found', async () => {
+      const result: UserGetDto | null = null;
       jest.spyOn(userService, 'getById').mockImplementation(async () => result);
-      expect(await userController.findByEmail('foo@bar.com')).toBe<undefined>(result);
+      expect(await userController.findByEmail('foo@bar.com')).toBe<null>(result);
     });
   });
 });

@@ -22,7 +22,7 @@ export class UserController {
   }
 
   @Get('/byId/:id')
-  async findById(@Param('id', ParseIntPipe) userId: number): Promise<UserGetDto | undefined> {
+  async findById(@Param('id', ParseIntPipe) userId: number): Promise<UserGetDto | null> {
     return await this.userService.getById(userId);
   }
 
@@ -30,7 +30,7 @@ export class UserController {
   @Post('/byEmail')
   async findByEmail(
     @Body('email', EmailValidationPipe) userEmail: string,
-  ): Promise<UserGetDto | undefined> {
+  ): Promise<UserGetDto | null> {
     return await this.userService.getByEmail(userEmail);
   }
 }

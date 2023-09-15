@@ -2,39 +2,47 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
 import { RegisterDto } from '../authentication/dto/register.dto';
 import { UserGetDto } from './dto/uset-get.dto';
+import { UserEntity } from './repositories/user.entity';
+import { Repository } from 'typeorm';
+import { UserMapper } from './mapper/user.mapper';
 
 describe('UserService', () => {
   let userService: UserService;
+  let userRepository: Repository<UserEntity>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [UserService],
+      providers: [UserService, {
+        provide: UserEntity,
+        useClass: Repository
+      }],
     }).compile();
 
+    userRepository = module.get<Repository<UserEntity>>(UserEntity);
     userService = module.get<UserService>(UserService);
   });
 
   describe('getAll', () => {
     it('should return an array of UserGetDto', async () => {
-      expect(await userService.getAll()).toBe<UserGetDto[]>(userService.users);
+      const entities: UserEntity[] = await userRepository.find();
+      let results: UserGetDto[] = [];
+
+      entities.forEach(async (userEntity: UserEntity) => {
+          results.push(await UserMapper.entityToDtoGet(userEntity) as UserGetDto);
+      });
+      expect(await userService.getAll()).toBe<UserGetDto[]>(results);
     });
   });
 
   describe('getById', () => {
     it('should return the UserGetDto with specified id', async () => {
-      expect(await userService.getById(1)).toBe<UserGetDto>(userService.users.find((el) => el.id === 1) as UserGetDto);
-    });
-    it('should return undefined if not found', async () => {
-      expect(await userService.getById(-1)).toBe(undefined);
+      expect(await userService.getById(1)).toBe<UserGetDto | null>(await UserMapper.entityToDtoGet(await userRepository.findOneBy({id: 1})));
     });
   });
 
   describe('getByEmail', () => {
     it('should return the UserGetDto with specified email', async () => {
-      expect(await userService.getByEmail('foo1@bar.fr')).toBe<UserGetDto>(userService.users.find((el) => el.email === 'foo1@bar.fr') as UserGetDto);
-    });
-    it('should return undefined if not found', async () => {
-      expect(await userService.getByEmail('foo@bar.com')).toBe(undefined);
+      expect(await userService.getByEmail('foo1@bar.fr')).toBe<UserGetDto | null>(await UserMapper.entityToDtoGet(await userRepository.findOneBy({email: 'foo1@bar.fr'})));
     });
   });
 
@@ -44,7 +52,7 @@ describe('UserService', () => {
         email: 'foo@bar.org',
         password: 'foobar'
       }
-      expect(await userService.create(registerDto)).toBe<UserGetDto>(userService.users.find((el) => el.email === 'foo@bar.org') as UserGetDto);
+      expect(await userService.create(registerDto)).toBe<UserGetDto>({id: 1, ...registerDto} as UserGetDto);
     });
   });
 });

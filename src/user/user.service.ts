@@ -1,47 +1,40 @@
 import { Injectable } from '@nestjs/common';
 import { RegisterDto } from '../authentication/dto/register.dto';
 import { UserGetDto } from './dto/uset-get.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { UserEntity } from './repositories/user.entity';
+import { Repository } from 'typeorm';
+import { UserMapper } from './mapper/user.mapper';
 
 @Injectable()
 export class UserService {
-  users: UserGetDto[] = [
-    {
-      id: 1,
-      email: 'foo1@bar.fr',
-      password: 'test123',
-    },
-    {
-      id: 2,
-      email: 'foo2@bar.com',
-      password: 'test123',
-    },
-    {
-      id: 3,
-      email: 'foo3@bar.org',
-      password: 'test123',
-    },
-  ];
+  constructor(
+    @InjectRepository(UserEntity)
+    private usersRepository: Repository<UserEntity>,
+  ) {}
 
   async getAll(): Promise<UserGetDto[]> {
-    return this.users;
+    const entities: UserEntity[] = await this.usersRepository.find();
+    let results: UserGetDto[] = [];
+
+    entities.forEach(async (userEntity: UserEntity) => {
+        results.push(await UserMapper.entityToDtoGet(userEntity) as UserGetDto);
+    });
+
+    return results;
   }
 
-  async getById(userId: number): Promise<UserGetDto | undefined> {
-    return this.users.find((el) => el.id === userId);
+  async getById(userId: number): Promise<UserGetDto | null> {
+    return await UserMapper.entityToDtoGet(await this.usersRepository.findOneBy({id: userId}));
   }
 
-  async getByEmail(userEmail: string): Promise<UserGetDto | undefined> {
-    return this.users.find((el) => el.email === userEmail);
+  async getByEmail(userEmail: string): Promise<UserGetDto | null> {
+    return await UserMapper.entityToDtoGet(await this.usersRepository.findOneBy({email: userEmail}));
   }
 
   async create(userInfo: RegisterDto): Promise<UserGetDto> {
-    const newUser = {
-      ...{ id: this.users[this.users.length - 1].id + 1 },
-      ...userInfo,
-    };
-
-    this.users.push(newUser);
-
-    return newUser;
+    const newUser: UserEntity = this.usersRepository.create(userInfo);
+    await this.usersRepository.save(newUser);
+    return await UserMapper.entityToDtoGet(newUser) as UserGetDto;
   }
 }
