@@ -13,7 +13,6 @@ import { UserEntity } from './user/repositories/user.entity';
     imports: [
         ConfigModule.forRoot({
             envFilePath: 'environments/.env',
-            isGlobal: true,
         }),
         TypeOrmModule.forRootAsync({
             useFactory: () => ({
@@ -31,7 +30,7 @@ import { UserEntity } from './user/repositories/user.entity';
                 ],
                 migrations: ['../typeorm_migrations/*{.ts,.js}'],
                 cli: {
-                    migrationsDir: 'src/migration'
+                    migrationsDir: '../typeorm_migrations'
                 },
                 migrationsTableName: "migrations_history",
             }),
