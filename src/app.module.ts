@@ -12,7 +12,7 @@ import { UserEntity } from './user/repositories/user.entity';
 @Module({
     imports: [
         ConfigModule.forRoot({
-            envFilePath: 'environments/.env.dev',
+            envFilePath: 'environments/.env',
             isGlobal: true,
         }),
         TypeOrmModule.forRootAsync({
