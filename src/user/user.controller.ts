@@ -12,8 +12,11 @@ import {
 import { EmailValidationPipe } from '../common/pipe/email-validation.pipe';
 import { UserService } from './user.service';
 import { UserGetDto } from './dto/user-get.dto';
-import { ApiBody, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiProperty, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { StringEmailDto } from '../common/dto/string-email.dto';
 
+@ApiBearerAuth()
+@ApiTags('user')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -28,7 +31,7 @@ export class UserController {
   }
 
   @ApiResponse({
-    description: "The user with specified id or null",
+    description: "The user with specified id",
     type: UserGetDto
   })
   @Get('/byId/:id')
@@ -37,14 +40,14 @@ export class UserController {
   }
 
   @ApiResponse({
-    description: "The user with specified email or null",
+    description: "The user with specified email",
     type: UserGetDto
   })
   @HttpCode(HttpStatus.OK)
   @Post('/byEmail')
   async findByEmail(
-    @Body('email', EmailValidationPipe) userEmail: string,
+    @Body() stringEmailDto: StringEmailDto,
   ): Promise<UserGetDto | null> {
-    return await this.userService.getByEmail(userEmail);
+    return await this.userService.getByEmail(stringEmailDto.email);
   }
 }

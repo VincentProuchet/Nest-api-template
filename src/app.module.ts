@@ -33,8 +33,8 @@ import { UserEntity } from './user/repositories/user.entity';
         UserModule,
         AuthenticationModule,
     ],
-    controllers: [AppController],
-    providers: [AppService],
+    controllers: [],
+    providers: [],
 })
 export class AppModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {
