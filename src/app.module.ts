@@ -11,9 +11,6 @@ import { UserEntity } from './user/repositories/user.entity';
 
 @Module({
     imports: [
-        ConfigModule.forRoot({
-            envFilePath: 'environments/.env',
-        }),
         TypeOrmModule.forRootAsync({
             useFactory: () => ({
                 type: 'mysql',
