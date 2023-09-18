@@ -1,7 +1,5 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { LoggerMiddleware } from './common/middleware/logger/logger.middleware';
 import { UserModule } from './user/user.module';
 import { AuthenticationModule } from './authentication/authentication.module';
@@ -18,16 +16,15 @@ import { UserEntity } from './user/repositories/user.entity';
                 password: process.env.DB_PASSWORD,
                 database: process.env.DB_NAME,
                 charset: 'utf8mb4',
-                synchronize: process.env.NODE_ENV === 'development' ? true : false,
+                synchronize:
+                    process.env.NODE_ENV === 'development' ? true : false,
                 debug: false,
-                entities: [
-                    UserEntity,
-                ],
+                entities: [UserEntity],
                 migrations: ['../typeorm_migrations/*{.ts,.js}'],
                 cli: {
-                    migrationsDir: '../typeorm_migrations'
+                    migrationsDir: '../typeorm_migrations',
                 },
-                migrationsTableName: "migrations_history",
+                migrationsTableName: 'migrations_history',
             }),
         }),
         UserModule,
