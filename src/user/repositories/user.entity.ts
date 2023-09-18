@@ -3,7 +3,7 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 @Entity({
   name: "user",
   orderBy: {
-      name: "ASC",
+      email: "ASC",
       id: "DESC",
   },
 })
