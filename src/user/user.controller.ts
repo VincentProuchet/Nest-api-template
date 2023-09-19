@@ -11,11 +11,10 @@ import {
     Post,
     Put,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { UserService } from './user.service';
 import { UserGetDto } from './dto/user-get.dto';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
-
 import { StringEmailDto } from '../common/dto/string-email.dto';
 import { UserUpdateDto } from './dto/user-update.dto';
 
@@ -23,7 +22,7 @@ import { UserUpdateDto } from './dto/user-update.dto';
 @ApiTags('user')
 @Controller('user')
 export class UserController {
-    constructor(private readonly userService: UserService) {}
+    constructor(private readonly userService: UserService) { }
 
     @ApiResponse({
         description: 'A list of all users',
@@ -33,7 +32,25 @@ export class UserController {
     async findAll(): Promise<UserGetDto[]> {
         return await this.userService.getAll();
     }
+    @ApiResponse({
+        description: 'A list of all users',
+        type: [UserGetDto],
+    })
+    @Get('all')
+    async findAll(): Promise<UserGetDto[]> {
+        return await this.userService.getAll();
+    }
 
+    @ApiResponse({
+        description: 'The user with specified id',
+        type: UserGetDto,
+    })
+    @Get('/byId/:id')
+    async findById(
+        @Param('id', ParseIntPipe) userId: number,
+    ): Promise<UserGetDto | null> {
+        return await this.userService.getById(userId);
+    }
     @ApiResponse({
         description: 'The user with specified id',
         type: UserGetDto,
@@ -56,7 +73,12 @@ export class UserController {
     ): Promise<UserGetDto | null> {
         return await this.userService.getByEmail(stringEmailDto.email);
     }
-
+    /**
+     * reception un UserUpdateDTO au user.service
+     * pour une mise à jour d'une entitée existante
+     * @param user 
+     * @returns UserUpdateDTO
+     */
     @ApiResponse({
         description: 'The updated user ',
         type: UserGetDto,

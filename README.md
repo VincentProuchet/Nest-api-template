@@ -5,16 +5,14 @@
 [circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
 [circleci-url]: https://circleci.com/gh/nestjs/nest
 
-  <p align="center">Un template 
+<p align="center">Un template
   <a href="https://nestjs.com/" target="_blank">Nest.js</a>
-  pour construire rapidement le back-end de votre API</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-
+  pour construire rapidement le back-end de votre API
 </p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+<p align="center">
+  <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
+  <a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
+</p>
 
 ## Description
 
@@ -25,31 +23,55 @@
 ```bash
 $ yarn install
 ```
+After packages installation it is necessary to create a file named .env.development in the environments directory, based on the file : environments/.env.template.
+
+For production purpose you will need to create a file named .env.production.
+
+You should then complete the created file.
 
 ## Running the app
 
 ```bash
-# development
-$ yarn run start
+# Development
+$ yarn start
 
-# watch mode
-$ yarn run start:dev
+# Development watch mode
+$ yarn start:dev
 
-# production mode
-$ yarn run start:prod
+# Production mode
+$ yarn start:prod
 ```
 
 ## Test
 
 ```bash
-# unit tests
-$ yarn run test
+# Run unit tests
+$ yarn test
 
-# e2e tests
-$ yarn run test:e2e
+# Run e2e tests
+$ yarn test:e2e
 
-# test coverage
-$ yarn run test:cov
+# Run test coverage
+$ yarn test:cov
+```
+
+## TypeORM
+
+```bash
+# Generate new migration
+$ yarn typeorm migration:generate ./typeorm_migrations/<migration-name> -d ./typeorm_migrations/datasources/migrations-datasource.ts
+
+# Apply migrations
+$ yarn typeorm migration:run -d ./typeorm_migrations/datasources/migrations-datasource.ts
+
+# Revert last migration applied
+$ yarn typeorm migration:revert -d ./typeorm_migrations/datasources/migrations-datasource.ts
+
+# Add migrations to migration table without applying it
+$ yarn typeorm migration:run --fake -d ./typeorm_migrations/datasources/migrations-datasource.ts
+
+# Remove migrations from migration table
+$ yarn typeorm migration:revert --fake -d ./typeorm_migrations/datasources/migrations-datasource.ts
 ```
 
 ## Support
