@@ -8,11 +8,10 @@ import {
   ParseIntPipe,
   Post,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { EmailValidationPipe } from '../common/pipe/email-validation.pipe';
 import { UserService } from './user.service';
 import { UserGetDto } from './dto/user-get.dto';
-import { ApiBearerAuth, ApiBody, ApiProperty, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { StringEmailDto } from '../common/dto/string-email.dto';
 
 @ApiBearerAuth()
@@ -22,8 +21,8 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @ApiResponse({
-    description: "A list of all users",
-    type: [UserGetDto]
+    description: 'A list of all users',
+    type: [UserGetDto],
   })
   @Get('all')
   async findAll(): Promise<UserGetDto[]> {
@@ -31,17 +30,19 @@ export class UserController {
   }
 
   @ApiResponse({
-    description: "The user with specified id",
-    type: UserGetDto
+    description: 'The user with specified id',
+    type: UserGetDto,
   })
   @Get('/byId/:id')
-  async findById(@Param('id', ParseIntPipe) userId: number): Promise<UserGetDto | null> {
+  async findById(
+    @Param('id', ParseIntPipe) userId: number,
+  ): Promise<UserGetDto | null> {
     return await this.userService.getById(userId);
   }
 
   @ApiResponse({
-    description: "The user with specified email",
-    type: UserGetDto
+    description: 'The user with specified email',
+    type: UserGetDto,
   })
   @HttpCode(HttpStatus.OK)
   @Post('/byEmail')

@@ -1,4 +1,4 @@
-import { UserEntity } from "../../user/repositories/user.entity";
+import { UserEntity } from '../../user/repositories/user.entity';
 
 export const dataSourceOpt = {
   type: 'mysql',
@@ -10,9 +10,7 @@ export const dataSourceOpt = {
   charset: 'utf8mb4',
   synchronize: process.env.NODE_ENV === 'development' ? true : false,
   debug: false,
-  migrations: ["./typeorm_migrations/*{.ts,.js}"],
-  migrationsTableName: "migrations_history",
-  entities: [
-      UserEntity,
-  ],
-}
+  migrations: ['./typeorm_migrations/*{.ts,.js}'],
+  migrationsTableName: 'migrations_history',
+  entities: [UserEntity],
+};

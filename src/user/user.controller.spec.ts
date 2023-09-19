@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { UserGetDto } from './dto/user-get.dto';
@@ -19,10 +20,12 @@ describe('UserController', () => {
 
   describe('getAll', () => {
     it('should return an array of UserGetDto', async () => {
-      const result: UserGetDto[] = [{
-        id: 1,
-        email: 'foo@bar.com'
-      }];
+      const result: UserGetDto[] = [
+        {
+          id: 1,
+          email: 'foo@bar.com',
+        },
+      ];
       jest.spyOn(userService, 'getAll').mockImplementation(async () => result);
 
       expect(await userController.findAll()).toBe<UserGetDto[]>(result);
@@ -39,7 +42,7 @@ describe('UserController', () => {
     it('should return the UserGetDto with specified id', async () => {
       const result: UserGetDto = {
         id: 1,
-        email: 'foo@bar.com'
+        email: 'foo@bar.com',
       };
       jest.spyOn(userService, 'getById').mockImplementation(async () => result);
       expect(await userController.findById(1)).toBe<UserGetDto>(result);
@@ -55,15 +58,21 @@ describe('UserController', () => {
     it('should return the UserGetDto with specified email', async () => {
       const result: UserGetDto = {
         id: 1,
-        email: 'foo@bar.com'
+        email: 'foo@bar.com',
       };
-      jest.spyOn(userService, 'getByEmail').mockImplementation(async () => result);
-      expect(await userController.findByEmail('foo@bar.com')).toBe<UserGetDto>(result);
+      jest
+        .spyOn(userService, 'getByEmail')
+        .mockImplementation(async () => result);
+      expect(
+        await userController.findByEmail({ email: 'foo@bar.com' }),
+      ).toBe<UserGetDto>(result);
     });
     it('should return null if not found', async () => {
       const result: UserGetDto | null = null;
       jest.spyOn(userService, 'getById').mockImplementation(async () => result);
-      expect(await userController.findByEmail('foo@bar.com')).toBe<null>(result);
+      expect(
+        await userController.findByEmail({ email: 'foo@bar.com' }),
+      ).toBe<null>(result);
     });
   });
 });
