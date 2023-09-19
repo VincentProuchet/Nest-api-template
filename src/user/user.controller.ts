@@ -32,14 +32,6 @@ export class UserController {
     async findAll(): Promise<UserGetDto[]> {
         return await this.userService.getAll();
     }
-    @ApiResponse({
-        description: 'A list of all users',
-        type: [UserGetDto],
-    })
-    @Get('all')
-    async findAll(): Promise<UserGetDto[]> {
-        return await this.userService.getAll();
-    }
 
     @ApiResponse({
         description: 'The user with specified id',
@@ -51,17 +43,6 @@ export class UserController {
     ): Promise<UserGetDto | null> {
         return await this.userService.getById(userId);
     }
-    @ApiResponse({
-        description: 'The user with specified id',
-        type: UserGetDto,
-    })
-    @Get('/byId/:id')
-    async findById(
-        @Param('id', ParseIntPipe) userId: number,
-    ): Promise<UserGetDto | null> {
-        return await this.userService.getById(userId);
-    }
-
     @ApiResponse({
         description: 'The user with specified email',
         type: UserGetDto,
@@ -76,7 +57,7 @@ export class UserController {
     /**
      * reception un UserUpdateDTO au user.service
      * pour une mise à jour d'une entitée existante
-     * @param user 
+     * @param user
      * @returns UserUpdateDTO
      */
     @ApiResponse({

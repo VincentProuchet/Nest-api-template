@@ -26,13 +26,17 @@ describe('UserController', () => {
                     email: 'foo@bar.com',
                 },
             ];
-            jest.spyOn(userService, 'getAll').mockImplementation(async () => result);
+            jest.spyOn(userService, 'getAll').mockImplementation(
+                async () => result,
+            );
 
             expect(await userController.findAll()).toBe<UserGetDto[]>(result);
         });
         it('should return an empty array', async () => {
             const result: UserGetDto[] = [];
-            jest.spyOn(userService, 'getAll').mockImplementation(async () => result);
+            jest.spyOn(userService, 'getAll').mockImplementation(
+                async () => result,
+            );
 
             expect(await userController.findAll()).toBe<UserGetDto[]>(result);
         });
@@ -44,12 +48,16 @@ describe('UserController', () => {
                 id: 1,
                 email: 'foo@bar.com',
             };
-            jest.spyOn(userService, 'getById').mockImplementation(async () => result);
+            jest.spyOn(userService, 'getById').mockImplementation(
+                async () => result,
+            );
             expect(await userController.findById(1)).toBe<UserGetDto>(result);
         });
         it('should return null if not found', async () => {
             const result: UserGetDto | null = null;
-            jest.spyOn(userService, 'getById').mockImplementation(async () => result);
+            jest.spyOn(userService, 'getById').mockImplementation(
+                async () => result,
+            );
             expect(await userController.findById(1)).toBe<null>(result);
         });
     });
@@ -60,16 +68,18 @@ describe('UserController', () => {
                 id: 1,
                 email: 'foo@bar.com',
             };
-            jest
-                .spyOn(userService, 'getByEmail')
-                .mockImplementation(async () => result);
+            jest.spyOn(userService, 'getByEmail').mockImplementation(
+                async () => result,
+            );
             expect(
                 await userController.findByEmail({ email: 'foo@bar.com' }),
             ).toBe<UserGetDto>(result);
         });
         it('should return null if not found', async () => {
             const result: UserGetDto | null = null;
-            jest.spyOn(userService, 'getById').mockImplementation(async () => result);
+            jest.spyOn(userService, 'getById').mockImplementation(
+                async () => result,
+            );
             expect(
                 await userController.findByEmail({ email: 'foo@bar.com' }),
             ).toBe<null>(result);
