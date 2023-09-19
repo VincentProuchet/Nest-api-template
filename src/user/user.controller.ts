@@ -1,4 +1,5 @@
 import {
+    BadRequestException,
     Body,
     Controller,
     Get,
@@ -11,20 +12,12 @@ import {
     Put,
 } from '@nestjs/common';
 
-import { EmailValidationPipe } from '../common/pipe/email-validation.pipe';
 import { UserService } from './user.service';
 import { UserGetDto } from './dto/user-get.dto';
-import {
-    ApiBearerAuth,
-    ApiBody,
-    ApiProperty,
-    ApiResponse,
-    ApiTags,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+
 import { StringEmailDto } from '../common/dto/string-email.dto';
 import { UserUpdateDto } from './dto/user-update.dto';
-import { UserDataIntegrityException } from './Exceptions/UserDataIntegrityException';
-import { error } from 'console';
 
 @ApiBearerAuth()
 @ApiTags('user')
@@ -63,18 +56,19 @@ export class UserController {
     ): Promise<UserGetDto | null> {
         return await this.userService.getByEmail(stringEmailDto.email);
     }
+
     @ApiResponse({
         description: 'The updated user ',
         type: UserGetDto,
     })
+    @HttpCode(HttpStatus.ACCEPTED)
     @Put('/update')
     async update(
         @Body() user: UserUpdateDto,
-    ): Promise<UserGetDto | HttpException> {
-        try {
-            return await this.userService.update(user);
-        } catch (reason: UserDataIntegrityException) {
-            throw new HttpException(reason.message, HttpStatus.FORBIDDEN);
+    ): Promise<UserUpdateDto | HttpException | Error> {
+        if (user == null) {
+            throw new BadRequestException('body est vide');
         }
+        return await this.userService.update(user);
     }
 }

@@ -1,4 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import {
+    HttpException,
+    HttpStatus,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 import { RegisterDto } from '../authentication/dto/register.dto';
 import { UserGetDto } from './dto/user-get.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -13,7 +18,7 @@ export class UserService {
     constructor(
         @InjectRepository(UserEntity)
         private usersRepository: Repository<UserEntity>,
-    ) {}
+    ) { }
 
     async getAll(): Promise<UserGetDto[]> {
         const entities: UserEntity[] = await this.usersRepository.find();
@@ -52,25 +57,43 @@ export class UserService {
      * @param userInfo
      * @returns
      */
-    async update(userInfo: UserUpdateDto): Promise<UserGetDto> {
-        const currentUser = (await this.usersRepository.findOneBy({
-            id: userInfo.id,
-        })) as UserEntity;
-        if (currentUser.email.valueOf() != userInfo.email) {
-            // @TODO répondre par une exception, l'email servant d'identifiant pour la connexion
-            // il ne peux être changé
-            // il est aussi possible que l'ont ait affaire à une usurpation d'identifiant
-            throw new UserDataIntegrityException(
-                'les emails des comptes ne peuvent pas être modifiés',
-            );
-        }
-
-        // fin des contrôles
-        // mise à jour des données
-        currentUser.firstname = userInfo.firstname;
-        currentUser.lastname = userInfo.lastname;
-
-        await this.usersRepository.save(currentUser); // mise en base de données
-        return (await UserMapper.entityToDtoGet(currentUser)) as UserGetDto;
+    async update(userInfo: UserUpdateDto): Promise<UserUpdateDto | Error> {
+        // on fait directement une recherche avec les deux données importantes
+        // qui  ne peuvent être changée en même temps que le reste
+        return await this.usersRepository
+            .findOneBy({
+                id: userInfo.id,
+                email: userInfo.email,
+            }) // entité récupérée
+            .then((user: UserEntity) => {
+                // mise à jour des données
+                user.firstname = userInfo.firstname;
+                user.lastname = userInfo.lastname;
+                return this.usersRepository
+                    .save(user) // mise en base de données
+                    .then(
+                        // sauvegarde réussié
+                        (userInfo: UserEntity) => {
+                            return UserMapper.entityToDtoUpdate(userInfo).then(
+                                // après la conversion en DTO
+                                (u) => {
+                                    return u;
+                                },
+                            );
+                        },
+                    )
+                    .catch(
+                        // sauvegarde échoue
+                        (reason: UserDataIntegrityException) => {
+                            throw new HttpException(
+                                reason.message,
+                                HttpStatus.FORBIDDEN,
+                            );
+                        },
+                    );
+            }) // entité non trouvée
+            .catch((reason: Error) => {
+                throw new NotFoundException(' utilisateur non trouvé');
+            });
     }
 }
