@@ -1,34 +1,14 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { TypeOrmModule, TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
 import { LoggerMiddleware } from './common/middleware/logger/logger.middleware';
 import { UserModule } from './user/user.module';
 import { AuthenticationModule } from './authentication/authentication.module';
-import { UserEntity } from './user/repositories/user.entity';
+import { dataSourceOpt } from './common/constant/datasource-opt.const';
 
 @Module({
     imports: [
         TypeOrmModule.forRootAsync({
-            useFactory: () => ({
-                type: 'mysql',
-                host: process.env.DB_HOST,
-                port: process.env.DB_PORT != null ? +process.env.DB_PORT : 3306,
-                username: process.env.DB_USERNAME,
-                password: process.env.DB_PASSWORD,
-                database: process.env.DB_NAME,
-                charset: 'utf8mb4',
-                synchronize: process.env.NODE_ENV === 'development' ? true : false,
-                debug: false,
-                entities: [
-                    UserEntity,
-                ],
-                migrations: ['../typeorm_migrations/*{.ts,.js}'],
-                cli: {
-                    migrationsDir: '../typeorm_migrations'
-                },
-                migrationsTableName: "migrations_history",
-            }),
+            useFactory: () => (dataSourceOpt as TypeOrmModuleAsyncOptions),
         }),
         UserModule,
         AuthenticationModule,
