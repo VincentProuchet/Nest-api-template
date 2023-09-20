@@ -49,6 +49,8 @@ describe('AuthenticationService', () => {
   });
 
   it('should be defined', () => {
+    expect(process.env.JWT_SECRET).toBeDefined();
+    expect(process.env.JWT_EXPIRE).toBeDefined();
     expect(authService).toBeDefined();
     expect(userService).toBeDefined();
     expect(jwtService).toBeDefined();
