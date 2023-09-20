@@ -1,5 +1,5 @@
 import { UserGetDto } from '../dto/user-get.dto';
-import { UserLoginDto } from '../dto/user-login.dto';
+import { UserAuthDto } from '../dto/user-auth.dto';
 import { UserEntity } from '../entities/user.entity';
 
 export class UserMapper {
@@ -14,13 +14,13 @@ export class UserMapper {
     return dto;
   }
 
-  static async entityToDtoLogin(
+  static async entityToDtoAuth(
     entity: UserEntity | null,
-  ): Promise<UserLoginDto | null> {
+  ): Promise<UserAuthDto | null> {
     if (!entity) return null;
 
-    const dto: UserLoginDto = {
-      hashedPassword: entity.password,
+    const dto: UserAuthDto = {
+      ...entity
     };
     return dto;
   }

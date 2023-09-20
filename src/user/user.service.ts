@@ -6,7 +6,7 @@ import { RegisterDto } from '../authentication/dto/register.dto';
 import { UserGetDto } from './dto/user-get.dto';
 import { UserEntity } from './entities/user.entity';
 import { UserMapper } from './mapper/user.mapper';
-import { UserLoginDto } from './dto/user-login.dto';
+import { UserAuthDto } from './dto/user-auth.dto';
 
 @Injectable()
 export class UserService {
@@ -44,8 +44,8 @@ export class UserService {
     return (await UserMapper.entityToDtoGet(newUser)) as UserGetDto;
   }
 
-  async getHashedPwdFromEmail(userEmail: string): Promise<UserLoginDto | null> {
-    return await UserMapper.entityToDtoLogin(
+  async getHashedPwdFromEmail(userEmail: string): Promise<UserAuthDto | null> {
+    return await UserMapper.entityToDtoAuth(
       await this.usersRepository.findOneBy({ email: userEmail }),
     );
   }
