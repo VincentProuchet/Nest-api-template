@@ -1,4 +1,4 @@
-import { UserEntity } from '../../user/repositories/user.entity';
+import { UserEntity } from '../../user/entities/user.entity';
 
 export const dataSourceOpt = {
   type: 'mysql',

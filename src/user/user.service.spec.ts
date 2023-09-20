@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { UserService } from './user.service';
 import { RegisterDto } from '../authentication/dto/register.dto';
 import { UserGetDto } from './dto/user-get.dto';
-import { UserEntity } from './repositories/user.entity';
+import { UserEntity } from './entities/user.entity';
 import { UserMapper } from './mapper/user.mapper';
 
 describe('UserService', () => {

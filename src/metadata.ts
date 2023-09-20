@@ -28,7 +28,7 @@ export default async () => {
           },
         ],
         [
-          import('./user/repositories/user.entity'),
+          import('./user/entities/user.entity'),
           {
             UserEntity: {
               id: { required: true, type: () => Number },
