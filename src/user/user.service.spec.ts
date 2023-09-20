@@ -42,21 +42,28 @@ describe('UserService', () => {
                 const results: UserGetDto[] = [];
                 describe('getAll', () => {
                     it('should return an array of UserGetDto', async () => {
-                        const entities: UserEntity[] = await userRepository.find();
+                        const entities: UserEntity[] =
+                            await userRepository.find();
                         const results: UserGetDto[] = [];
 
                         entities.forEach(async (userEntity: UserEntity) => {
                             results.push(
-                                (await UserMapper.entityToDtoGet(userEntity)) as UserGetDto,
+                                (await UserMapper.entityToDtoGet(
+                                    userEntity,
+                                )) as UserGetDto,
                             );
                         });
-                        expect(await userService.getAll()).toBe<UserGetDto[]>(results);
+                        expect(await userService.getAll()).toBe<UserGetDto[]>(
+                            results,
+                        );
                     });
                 });
 
                 describe('getById', () => {
                     it('should return the UserGetDto with specified id', async () => {
-                        expect(await userService.getById(1)).toBe<UserGetDto | null>(
+                        expect(
+                            await userService.getById(1),
+                        ).toBe<UserGetDto | null>(
                             await UserMapper.entityToDtoGet(
                                 await userRepository.findOneBy({ id: 1 }),
                             ),
@@ -70,7 +77,9 @@ describe('UserService', () => {
                             await userService.getByEmail('foo1@bar.fr'),
                         ).toBe<UserGetDto | null>(
                             await UserMapper.entityToDtoGet(
-                                await userRepository.findOneBy({ email: 'foo1@bar.fr' }),
+                                await userRepository.findOneBy({
+                                    email: 'foo1@bar.fr',
+                                }),
                             ),
                         );
                     });
@@ -82,10 +91,15 @@ describe('UserService', () => {
                             email: 'foo@bar.org',
                             password: 'foobar',
                         };
-                        expect(await userService.create(registerDto)).toBe<UserGetDto>({
+                        expect(
+                            await userService.create(registerDto),
+                        ).toBe<UserGetDto>({
                             id: 1,
                             ...registerDto,
                         } as UserGetDto);
                     });
                 });
             });
+        });
+    });
+});

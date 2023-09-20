@@ -94,7 +94,9 @@ export class UserService {
                     );
             }) // entité non trouvée
             .catch((reason: Error) => {
-                throw new NotFoundException(' utilisateur non trouvé');
+                throw new NotFoundException(
+                    ' utilisateur non trouvé' + reason.message,
+                );
             });
     }
 }

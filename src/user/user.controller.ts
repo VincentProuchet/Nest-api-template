@@ -22,7 +22,7 @@ import { UserUpdateDto } from './dto/user-update.dto';
 @ApiTags('user')
 @Controller('user')
 export class UserController {
-    constructor(private readonly userService: UserService) { }
+    constructor(private readonly userService: UserService) {}
 
     @ApiResponse({
         description: 'A list of all users',
