@@ -8,7 +8,7 @@ import { LoginDto } from './dto/login.dto';
 import { AccessTokenDto } from './dto/access-token.dto';
 
 const accessToken: AccessTokenDto = {
-  access_token: 'test_token_123',
+  accessToken: 'test_token_123',
 };
 
 describe('AuthenticationController', () => {
@@ -53,7 +53,7 @@ describe('AuthenticationController', () => {
       };
       const userDto: UserGetDto = {
         id: 1,
-        email: 'foo@bar.com',
+        email: registerDto.email,
       };
 
       expect(
@@ -63,7 +63,7 @@ describe('AuthenticationController', () => {
   });
 
   describe('signIn', () => {
-    it('should return an access_token', async () => {
+    it('should return an access token as AccessTokenDto', async () => {
       const loginDto: LoginDto = {
         email: 'foo@bar.com',
         password: 'foobar1234',

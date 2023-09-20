@@ -27,7 +27,7 @@ export class AuthenticationService {
 
     const payload = { sub: foundUser.id, username: foundUser.email };
     const response: AccessTokenDto = {
-      access_token: await this.jwtService.signAsync(payload, {
+      accessToken: await this.jwtService.signAsync(payload, {
         secret: process.env.JWT_SECRET,
         expiresIn: process.env.JWT_EXPIRE,
       }),
