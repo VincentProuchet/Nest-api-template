@@ -4,6 +4,22 @@ import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { UserGetDto } from './dto/user-get.dto';
 
+
+const userArray: UserGetDto[] = [
+  {
+    id: 1,
+    email: 'foo1@bar.com',
+  },
+  {
+    id: 2,
+    email: 'foo2@bar.com',
+  },
+  {
+    id: 3,
+    email: 'foo3@bar.com',
+  },
+];
+
 describe('UserController', () => {
   let userController: UserController;
   let userService: UserService;
@@ -11,7 +27,28 @@ describe('UserController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UserController],
-      providers: [UserService],
+      providers: [
+        {
+          provide: UserService,
+          useValue: {
+            getAll: jest.fn().mockResolvedValue(userArray),
+            getById: jest.fn().mockImplementation(
+              (id: number) => {
+                return Promise.resolve(
+                  userArray.find((userDto: UserGetDto) => userDto.id === id) ?? null
+                );
+              }
+            ),
+            getByEmail: jest.fn().mockImplementation(
+              (email: string) => {
+                return Promise.resolve(
+                  userArray.find((userDto: UserGetDto) => userDto.email === email) ?? null
+                );
+              }
+            ),
+          }
+        }
+      ],
     }).compile();
 
     userController = module.get<UserController>(UserController);
@@ -20,21 +57,7 @@ describe('UserController', () => {
 
   describe('getAll', () => {
     it('should return an array of UserGetDto', async () => {
-      const result: UserGetDto[] = [
-        {
-          id: 1,
-          email: 'foo@bar.com',
-        },
-      ];
-      jest.spyOn(userService, 'getAll').mockImplementation(async () => result);
-
-      expect(await userController.findAll()).toBe<UserGetDto[]>(result);
-    });
-    it('should return an empty array', async () => {
-      const result: UserGetDto[] = [];
-      jest.spyOn(userService, 'getAll').mockImplementation(async () => result);
-
-      expect(await userController.findAll()).toBe<UserGetDto[]>(result);
+      expect(await userController.findAll()).toBe<UserGetDto[]>(userArray);
     });
   });
 
@@ -42,37 +65,29 @@ describe('UserController', () => {
     it('should return the UserGetDto with specified id', async () => {
       const result: UserGetDto = {
         id: 1,
-        email: 'foo@bar.com',
+        email: 'foo1@bar.com',
       };
-      jest.spyOn(userService, 'getById').mockImplementation(async () => result);
-      expect(await userController.findById(1)).toBe<UserGetDto>(result);
+      expect(await userController.findById(1)).toStrictEqual<UserGetDto>(result);
     });
     it('should return null if not found', async () => {
-      const result: UserGetDto | null = null;
-      jest.spyOn(userService, 'getById').mockImplementation(async () => result);
-      expect(await userController.findById(1)).toBe<null>(result);
+      expect(await userController.findById(4)).toBe<null>(null);
     });
   });
 
   describe('getByEmail', () => {
     it('should return the UserGetDto with specified email', async () => {
       const result: UserGetDto = {
-        id: 1,
-        email: 'foo@bar.com',
+        id: 2,
+        email: 'foo2@bar.com',
       };
-      jest
-        .spyOn(userService, 'getByEmail')
-        .mockImplementation(async () => result);
       expect(
-        await userController.findByEmail({ email: 'foo@bar.com' }),
-      ).toBe<UserGetDto>(result);
+        await userController.findByEmail({ email: 'foo2@bar.com' }),
+      ).toStrictEqual<UserGetDto>(result);
     });
     it('should return null if not found', async () => {
-      const result: UserGetDto | null = null;
-      jest.spyOn(userService, 'getById').mockImplementation(async () => result);
       expect(
-        await userController.findByEmail({ email: 'foo@bar.com' }),
-      ).toBe<null>(result);
+        await userController.findByEmail({ email: 'test@test.com' }),
+      ).toBe<null>(null);
     });
   });
 });

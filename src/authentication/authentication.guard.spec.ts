@@ -37,4 +37,13 @@ describe('AuthenticationGuard', () => {
 
     expect(authGuard.canActivate(context)).toBeTruthy();
   });
+
+  // TODO: find a way to test UnauthorizedException
+  // it('should return UnauthorizedException without access token', async () => {
+  //   const context = createMock<ExecutionContext>();
+  //   const errorGuard = () => authGuard.canActivate(context);
+
+  //   expect(errorGuard).toThrowError(UnauthorizedException);
+  //   expect(context.switchToHttp).toBeCalledTimes(1);
+  // });
 });
