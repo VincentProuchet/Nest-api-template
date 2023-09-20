@@ -19,7 +19,9 @@ export class AuthenticationService {
   }
 
   async login(userInfo: LoginDto): Promise<AccessTokenDto> {
-    const foundUser: any = await this.userService.getHashedPwdFromEmail(userInfo.email);
+    const foundUser: any = await this.userService.getHashedPwdFromEmail(
+      userInfo.email,
+    );
     if (foundUser?.password !== userInfo.password)
       throw new UnauthorizedException('Wrong email or password');
 

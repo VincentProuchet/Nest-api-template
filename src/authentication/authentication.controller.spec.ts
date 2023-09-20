@@ -7,9 +7,8 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { AccessTokenDto } from './dto/access-token.dto';
 
-
 const accessToken: AccessTokenDto = {
-  access_token: 'test_token_123'
+  access_token: 'test_token_123',
 };
 
 describe('AuthenticationController', () => {
@@ -23,21 +22,21 @@ describe('AuthenticationController', () => {
         {
           provide: AuthenticationService,
           useValue: {
-            register: jest.fn().mockImplementation(
-              (dto: RegisterDto) => {
-                return Promise.resolve<UserGetDto>({
-                  id: 1,
-                  email: dto.email
-                });
-              }
-            ),
-            login: jest.fn().mockResolvedValue(accessToken)
-          }
+            register: jest.fn().mockImplementation((dto: RegisterDto) => {
+              return Promise.resolve<UserGetDto>({
+                id: 1,
+                email: dto.email,
+              });
+            }),
+            login: jest.fn().mockResolvedValue(accessToken),
+          },
         },
       ],
     }).compile();
 
-    authController = module.get<AuthenticationController>(AuthenticationController);
+    authController = module.get<AuthenticationController>(
+      AuthenticationController,
+    );
     authService = module.get<AuthenticationService>(AuthenticationService);
   });
 
@@ -50,14 +49,16 @@ describe('AuthenticationController', () => {
     it('should return the newly created user as UserDtoGet', async () => {
       const registerDto: RegisterDto = {
         email: 'foo@bar.com',
-        password: 'foobar1234'
-      }
+        password: 'foobar1234',
+      };
       const userDto: UserGetDto = {
         id: 1,
-        email: 'foo@bar.com'
+        email: 'foo@bar.com',
       };
 
-      expect(await authController.signUp(registerDto)).toStrictEqual<UserGetDto>(userDto);
+      expect(
+        await authController.signUp(registerDto),
+      ).toStrictEqual<UserGetDto>(userDto);
     });
   });
 
@@ -65,10 +66,12 @@ describe('AuthenticationController', () => {
     it('should return an access_token', async () => {
       const loginDto: LoginDto = {
         email: 'foo@bar.com',
-        password: 'foobar1234'
+        password: 'foobar1234',
       };
 
-      expect(await authController.signIn(loginDto)).toBe<AccessTokenDto>(accessToken);
+      expect(await authController.signIn(loginDto)).toBe<AccessTokenDto>(
+        accessToken,
+      );
     });
   });
 });

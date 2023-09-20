@@ -20,7 +20,7 @@ export class UserMapper {
     if (!entity) return null;
 
     const dto: UserAuthDto = {
-      ...entity
+      ...entity,
     };
     return dto;
   }
