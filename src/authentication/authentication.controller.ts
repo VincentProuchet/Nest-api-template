@@ -12,16 +12,16 @@ import { AccessTokenDto } from 'src/authentication/dto/access-token.dto';
 @AllowAnonymous()
 @Controller('auth')
 export class AuthenticationController {
-    constructor(private readonly authService: AuthenticationService) {}
+	constructor(private readonly authService: AuthenticationService) {}
 
-    @Post('/signup')
-    async signUp(@Body() userInfo: RegisterDto): Promise<UserGetDto> {
-        return await this.authService.register(userInfo);
-    }
+	@Post('/signUp')
+	async signUp(@Body() userInfo: RegisterDto): Promise<UserGetDto> {
+		return await this.authService.register(userInfo);
+	}
 
-    @HttpCode(HttpStatus.OK)
-    @Post('/signin')
-    async signIn(@Body() userInfo: LoginDto): Promise<AccessTokenDto> {
-        return await this.authService.login(userInfo);
-    }
+	@HttpCode(HttpStatus.OK)
+	@Post('/signIn')
+	async signIn(@Body() userInfo: LoginDto): Promise<AccessTokenDto> {
+		return await this.authService.login(userInfo);
+	}
 }
