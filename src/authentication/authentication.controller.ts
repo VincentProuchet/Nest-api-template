@@ -14,13 +14,13 @@ import { AccessTokenDto } from 'src/authentication/dto/access-token.dto';
 export class AuthenticationController {
   constructor(private readonly authService: AuthenticationService) {}
 
-  @Post('/signup')
+  @Post('/signUp')
   async signUp(@Body() userInfo: RegisterDto): Promise<UserGetDto> {
     return await this.authService.register(userInfo);
   }
 
   @HttpCode(HttpStatus.OK)
-  @Post('/signin')
+  @Post('/signIn')
   async signIn(@Body() userInfo: LoginDto): Promise<AccessTokenDto> {
     return await this.authService.login(userInfo);
   }

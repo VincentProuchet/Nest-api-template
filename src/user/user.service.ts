@@ -6,6 +6,7 @@ import { RegisterDto } from '../authentication/dto/register.dto';
 import { UserGetDto } from './dto/user-get.dto';
 import { UserEntity } from './repositories/user.entity';
 import { UserMapper } from './mapper/user.mapper';
+import { UserLoginDto } from './dto/user-login.dto';
 
 @Injectable()
 export class UserService {
@@ -41,5 +42,11 @@ export class UserService {
     const newUser: UserEntity = this.usersRepository.create(userInfo);
     await this.usersRepository.save(newUser);
     return (await UserMapper.entityToDtoGet(newUser)) as UserGetDto;
+  }
+
+  async getHashedPwdFromEmail(userEmail: string): Promise<UserLoginDto | null> {
+    return await UserMapper.entityToDtoLogin(
+      await this.usersRepository.findOneBy({ email: userEmail }),
+    );
   }
 }
