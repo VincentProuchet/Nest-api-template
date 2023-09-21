@@ -3,11 +3,11 @@ import { JwtService } from '@nestjs/jwt';
 
 import { AuthenticationService } from './authentication.service';
 import { UserService } from '../user/user.service';
-import { RegisterDto } from './dto/register.dto';
-import { UserGetDto } from '../user/dto/user-get.dto';
-import { UserAuthDto } from '../user/dto/user-auth.dto';
-import { LoginDto } from './dto/login.dto';
-import { AccessTokenDto } from './dto/access-token.dto';
+import { RegisterDto } from './dto/in/register.dto';
+import { UserGetDto } from '../user/dto/out/user-get.dto';
+import { UserAuthDto } from '../user/dto/out/user-auth.dto';
+import { LoginDto } from './dto/in/login.dto';
+import { AccessTokenDto } from './dto/out/access-token.dto';
 
 const userAuthDto: UserAuthDto = {
   id: 1,

@@ -2,10 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { AuthenticationController } from './authentication.controller';
 import { AuthenticationService } from './authentication.service';
-import { UserGetDto } from 'src/user/dto/user-get.dto';
-import { RegisterDto } from './dto/register.dto';
-import { LoginDto } from './dto/login.dto';
-import { AccessTokenDto } from './dto/access-token.dto';
+import { UserGetDto } from 'src/user/dto/out/user-get.dto';
+import { RegisterDto } from './dto/in/register.dto';
+import { LoginDto } from './dto/in/login.dto';
+import { AccessTokenDto } from './dto/out/access-token.dto';
 
 const accessToken: AccessTokenDto = {
   accessToken: 'test_token_123',

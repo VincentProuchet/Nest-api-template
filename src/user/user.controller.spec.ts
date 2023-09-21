@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
-import { UserGetDto } from './dto/user-get.dto';
+import { UserGetDto } from './dto/out/user-get.dto';
 
 const userArray: UserGetDto[] = [
   {

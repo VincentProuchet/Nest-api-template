@@ -12,9 +12,9 @@ import {
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { UserService } from './user.service';
-import { UserGetDto } from './dto/user-get.dto';
+import { UserGetDto } from './dto/out/user-get.dto';
 import { StringEmailDto } from '../common/dto/string-email.dto';
-import { UserUpdateDto } from './dto/user-update.dto';
+import { UserUpdateDto } from './dto/in/user-update.dto';
 
 @ApiBearerAuth()
 @ApiTags('user')

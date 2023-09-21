@@ -2,12 +2,11 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { RegisterDto } from '../authentication/dto/register.dto';
-import { UserGetDto } from './dto/user-get.dto';
+import { RegisterDto } from '../authentication/dto/in/register.dto';
+import { UserGetDto } from './dto/out/user-get.dto';
 import { UserEntity } from './entities/user.entity';
-import { UserMapper } from './mapper/user.mapper';
-import { UserAuthDto } from './dto/user-auth.dto';
-import { UserUpdateDto } from './dto/user-update.dto';
+import { UserAuthDto } from './dto/out/user-auth.dto';
+import { UserUpdateDto } from './dto/in/user-update.dto';
 
 @Injectable()
 export class UserService {
@@ -21,28 +20,30 @@ export class UserService {
     const results: UserGetDto[] = [];
 
     entities.forEach(async (userEntity: UserEntity) => {
-      results.push((await UserMapper.entityToDtoGet(userEntity)) as UserGetDto);
+      results.push(new UserGetDto(userEntity));
     });
 
     return results;
   }
 
   async getById(userId: number): Promise<UserGetDto | null> {
-    return await UserMapper.entityToDtoGet(
-      await this.usersRepository.findOneBy({ id: userId }),
-    );
+    const userEntity: UserEntity | null = await this.usersRepository.findOneBy({
+      id: userId,
+    });
+    return userEntity ? new UserGetDto(userEntity) : null;
   }
 
   async getByEmail(userEmail: string): Promise<UserGetDto | null> {
-    return await UserMapper.entityToDtoGet(
-      await this.usersRepository.findOneBy({ email: userEmail }),
-    );
+    const userEntity: UserEntity | null = await this.usersRepository.findOneBy({
+      email: userEmail,
+    });
+    return userEntity ? new UserGetDto(userEntity) : null;
   }
 
   async create(userInfo: RegisterDto): Promise<UserGetDto> {
-    const newUser: UserEntity = this.usersRepository.create(userInfo);
+    const newUser: UserEntity | null = this.usersRepository.create(userInfo);
     await this.usersRepository.save(newUser);
-    return (await UserMapper.entityToDtoGet(newUser)) as UserGetDto;
+    return new UserGetDto(newUser);
   }
 
   /**
@@ -65,15 +66,16 @@ export class UserService {
 
       await this.usersRepository.save(user);
 
-      return (await UserMapper.entityToDtoGet(user)) as UserGetDto;
+      return new UserGetDto(user);
     } else {
       throw new BadRequestException('user to modify not found');
     }
   }
 
   async getHashedPwdFromEmail(userEmail: string): Promise<UserAuthDto | null> {
-    return await UserMapper.entityToDtoAuth(
-      await this.usersRepository.findOneBy({ email: userEmail }),
-    );
+    const userEntity: UserEntity | null = await this.usersRepository.findOneBy({
+      email: userEmail,
+    });
+    return userEntity ? new UserAuthDto(userEntity) : null;
   }
 }

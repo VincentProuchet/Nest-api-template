@@ -2,11 +2,11 @@ import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { AuthenticationService } from './authentication.service';
-import { RegisterDto } from './dto/register.dto';
-import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/in/register.dto';
+import { LoginDto } from './dto/in/login.dto';
 import { AllowAnonymous } from '../common/decorator/allow-anonymous.decorator';
-import { UserGetDto } from 'src/user/dto/user-get.dto';
-import { AccessTokenDto } from 'src/authentication/dto/access-token.dto';
+import { UserGetDto } from 'src/user/dto/out/user-get.dto';
+import { AccessTokenDto } from 'src/authentication/dto/out/access-token.dto';
 
 @ApiTags('auth')
 @AllowAnonymous()
