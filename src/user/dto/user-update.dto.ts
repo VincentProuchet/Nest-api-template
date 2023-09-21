@@ -1,17 +1,15 @@
 import { IsEmail, IsNotEmpty, IsPositive } from 'class-validator';
 
 export class UserUpdateDto {
-  @IsPositive()
-  id: number;
+	@IsPositive()
+	id: number;
 
-  @IsEmail()
-  email: string;
+	@IsEmail()
+	email: string;
 
-  /** prénom */
-  @IsNotEmpty()
-  firstname: string;
+	/** prénom */
+	firstname?: string;
 
-  /** nom */
-  @IsNotEmpty()
-  lastname: string;
+	/** nom */
+	lastname?: string;
 }
