@@ -1,6 +1,6 @@
 import { JwtService } from '@nestjs/jwt';
 import { Reflector } from '@nestjs/core';
-import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
+import { ExecutionContext } from '@nestjs/common';
 import { createMock } from '@golevelup/ts-jest';
 
 import { AuthenticationGuard } from './authentication.guard';
@@ -23,10 +23,13 @@ describe('AuthenticationGuard', () => {
   });
 
   it('should return true with access token', async () => {
-    const token: string = await jwtService.signAsync({ sub: 1, username: 'foo@bar.com' }, {
-      secret: process.env.JWT_SECRET,
-      expiresIn: process.env.JWT_EXPIRE,
-    });
+    const token: string = await jwtService.signAsync(
+      { sub: 1, username: 'foo@bar.com' },
+      {
+        secret: process.env.JWT_SECRET,
+        expiresIn: process.env.JWT_EXPIRE,
+      },
+    );
 
     const context = createMock<ExecutionContext>();
     context.switchToHttp().getRequest.mockReturnValue({

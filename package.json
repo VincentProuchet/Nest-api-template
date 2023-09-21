@@ -18,7 +18,7 @@
     "test:cov": "env-cmd -f ./environments/.env.development jest --coverage",
     "test:debug": "env-cmd -f ./environments/.env.development node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "env-cmd -f ./environments/.env.development jest --config ./test/jest-e2e.json",
-    "typeorm": "env-cmd -f ./environments/.env.development typeorm-ts-node-esm"
+    "typeorm": "env-cmd -f ./environments/.env.typeormcli typeorm-ts-node-esm"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",

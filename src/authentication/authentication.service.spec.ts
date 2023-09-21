@@ -9,11 +9,10 @@ import { UserAuthDto } from '../user/dto/user-auth.dto';
 import { LoginDto } from './dto/login.dto';
 import { AccessTokenDto } from './dto/access-token.dto';
 
-
 const userAuthDto: UserAuthDto = {
   id: 1,
   email: 'foo@bar.com',
-  password: 'foobar1234'
+  password: 'foobar1234',
 };
 
 describe('AuthenticationService', () => {
@@ -28,16 +27,16 @@ describe('AuthenticationService', () => {
         {
           provide: UserService,
           useValue: {
-            create: jest.fn().mockImplementation(
-              (dto: RegisterDto) => {
-                return Promise.resolve<UserGetDto>({
-                  id: 1,
-                  email: dto.email
-                });
-              }
-            ),
+            create: jest.fn().mockImplementation((dto: RegisterDto) => {
+              return Promise.resolve<UserGetDto>({
+                id: 1,
+                email: dto.email,
+                firstname: 'jean',
+                lastname: 'dupont',
+              });
+            }),
             getHashedPwdFromEmail: jest.fn().mockResolvedValue(userAuthDto),
-          }
+          },
         },
         JwtService,
       ],
@@ -60,12 +59,14 @@ describe('AuthenticationService', () => {
     it('should return created user as UserGetDto', async () => {
       const registerDto: RegisterDto = {
         email: 'foo@bar.com',
-        password: 'foobar1234'
-      }
+        password: 'foobar1234',
+      };
       const userDto: UserGetDto = {
         id: 1,
-        email: registerDto.email
-      }
+        email: registerDto.email,
+        firstname: 'jean',
+        lastname: 'dupont',
+      };
       expect(await authService.register(registerDto)).toStrictEqual(userDto);
     });
   });
@@ -74,8 +75,8 @@ describe('AuthenticationService', () => {
     it('should return an access token as AccessTokenDto', async () => {
       const loginDto: LoginDto = {
         email: 'foo@bar.com',
-        password: 'foobar1234'
-      }
+        password: 'foobar1234',
+      };
 
       const payload = { sub: userAuthDto.id, username: userAuthDto.email };
       const result: AccessTokenDto = {

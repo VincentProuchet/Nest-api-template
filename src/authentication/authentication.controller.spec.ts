@@ -26,6 +26,8 @@ describe('AuthenticationController', () => {
               return Promise.resolve<UserGetDto>({
                 id: 1,
                 email: dto.email,
+                firstname: 'jean',
+                lastname: 'dupont',
               });
             }),
             login: jest.fn().mockResolvedValue(accessToken),
@@ -54,6 +56,8 @@ describe('AuthenticationController', () => {
       const userDto: UserGetDto = {
         id: 1,
         email: registerDto.email,
+        firstname: 'jean',
+        lastname: 'dupont',
       };
 
       expect(

@@ -70,6 +70,8 @@ describe('UserService', () => {
       };
       expect(await userService.create(registerDto)).toBe<UserGetDto>({
         id: 1,
+        firstname: '',
+        lastname: '',
         ...registerDto,
       } as UserGetDto);
     });

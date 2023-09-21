@@ -1,5 +1,10 @@
 import { UserEntity } from '../../user/entities/user.entity';
 
+const migrationsArray =
+  process.env.TYPEORM_USE_CLI === 'true'
+    ? ['./typeorm_migrations/*{.ts,.js}']
+    : [];
+
 export const dataSourceOpt = {
   type: 'mysql',
   host: process.env.DB_HOST != null ? process.env.DB_HOST : 'localhost',
@@ -10,7 +15,7 @@ export const dataSourceOpt = {
   charset: 'utf8mb4',
   synchronize: process.env.NODE_ENV === 'development' ? true : false,
   debug: false,
-  migrations: ['./typeorm_migrations/*{.ts,.js}'],
+  migrations: migrationsArray,
   migrationsTableName: 'migrations_history',
   entities: [UserEntity],
 };
