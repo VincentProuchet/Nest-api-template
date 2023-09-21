@@ -2,6 +2,7 @@
 export default async () => {
   const t = {
     ['./user/dto/user-get.dto']: await import('./user/dto/user-get.dto'),
+    ['./user/dto/user-update.dto']: await import('./user/dto/user-update.dto'),
     ['./authentication/dto/access-token.dto']: await import(
       './authentication/dto/access-token.dto'
     ),
@@ -24,6 +25,8 @@ export default async () => {
             UserGetDto: {
               id: { required: true, type: () => Number },
               email: { required: true, type: () => String },
+              firstname: { required: true, type: () => String },
+              lastname: { required: true, type: () => String },
             },
           },
         ],
@@ -34,6 +37,29 @@ export default async () => {
               id: { required: true, type: () => Number },
               email: { required: true, type: () => String },
               password: { required: true, type: () => String },
+              firstname: { required: true, type: () => String },
+              lastname: { required: true, type: () => String },
+            },
+          },
+        ],
+        [
+          import('./user/dto/user-auth.dto'),
+          {
+            UserAuthDto: {
+              id: { required: true, type: () => Number },
+              email: { required: true, type: () => String },
+              password: { required: true, type: () => String },
+            },
+          },
+        ],
+        [
+          import('./user/dto/user-update.dto'),
+          {
+            UserUpdateDto: {
+              id: { required: true, type: () => Number, minimum: 1 },
+              email: { required: true, type: () => String },
+              firstname: { required: true, type: () => String },
+              lastname: { required: true, type: () => String },
             },
           },
         ],
@@ -54,16 +80,7 @@ export default async () => {
           import('./authentication/dto/access-token.dto'),
           {
             AccessTokenDto: {
-              access_token: { required: true, type: () => String },
-            },
-          },
-        ],
-        [
-          import('./common/test/test.entity'),
-          {
-            UserEntity: {
-              id: { required: true, type: () => Number },
-              test: { required: true, type: () => String },
+              accessToken: { required: true, type: () => String },
             },
           },
         ],
@@ -80,6 +97,7 @@ export default async () => {
               findAll: { type: [t['./user/dto/user-get.dto'].UserGetDto] },
               findById: { type: Object },
               findByEmail: { type: Object },
+              update: { type: t['./user/dto/user-update.dto'].UserUpdateDto },
             },
           },
         ],

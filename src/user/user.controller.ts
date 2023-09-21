@@ -7,12 +7,14 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Put,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { UserService } from './user.service';
 import { UserGetDto } from './dto/user-get.dto';
 import { StringEmailDto } from '../common/dto/string-email.dto';
+import { UserUpdateDto } from './dto/user-update.dto';
 
 @ApiBearerAuth()
 @ApiTags('user')
@@ -50,5 +52,21 @@ export class UserController {
     @Body() stringEmailDto: StringEmailDto,
   ): Promise<UserGetDto | null> {
     return await this.userService.getByEmail(stringEmailDto.email);
+  }
+
+  /**
+   * reception un UserUpdateDTO au user.service
+   * pour une mise à jour d'une entitée existante
+   * @param user
+   * @returns UserUpdateDTO
+   */
+  @ApiResponse({
+    description: 'The updated user ',
+    type: UserGetDto,
+  })
+  @HttpCode(HttpStatus.ACCEPTED)
+  @Put('/update')
+  async update(@Body() user: UserUpdateDto): Promise<UserGetDto> {
+    return await this.userService.update(user);
   }
 }

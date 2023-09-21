@@ -16,4 +16,11 @@ export class UserEntity {
 
   @Column()
   password: string;
+
+  /** prénom */
+  @Column({ type: 'varchar', length: 64 })
+  firstname: string;
+  /** nom */
+  @Column({ type: 'varchar', length: 64 })
+  lastname: string;
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -7,6 +7,7 @@ import { UserGetDto } from './dto/user-get.dto';
 import { UserEntity } from './entities/user.entity';
 import { UserMapper } from './mapper/user.mapper';
 import { UserAuthDto } from './dto/user-auth.dto';
+import { UserUpdateDto } from './dto/user-update.dto';
 
 @Injectable()
 export class UserService {
@@ -42,6 +43,32 @@ export class UserService {
     const newUser: UserEntity = this.usersRepository.create(userInfo);
     await this.usersRepository.save(newUser);
     return (await UserMapper.entityToDtoGet(newUser)) as UserGetDto;
+  }
+
+  /**
+   * Met à jours les informations
+   * d'un instance UserEntity
+   * contrôle l'intégrité des données
+   * @param userInfo
+   * @returns
+   */
+  async update(userInfo: UserUpdateDto): Promise<UserGetDto> {
+    // on fait directement une recherche avec les deux données importantes
+    // qui  ne peuvent être changée en même temps que le reste
+    const user: UserEntity | null = await this.usersRepository.findOneBy({
+      id: userInfo.id,
+      email: userInfo.email,
+    });
+    if (user) {
+      user.firstname = userInfo.firstname;
+      user.lastname = userInfo.lastname;
+
+      await this.usersRepository.save(user);
+
+      return (await UserMapper.entityToDtoGet(user)) as UserGetDto;
+    } else {
+      throw new BadRequestException('user to modify not found');
+    }
   }
 
   async getHashedPwdFromEmail(userEmail: string): Promise<UserAuthDto | null> {
