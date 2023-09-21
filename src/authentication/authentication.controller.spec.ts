@@ -22,14 +22,12 @@ describe('AuthenticationController', () => {
 				{
 					provide: AuthenticationService,
 					useValue: {
-						register: jest
-							.fn()
-							.mockImplementation((dto: RegisterDto) => {
-								return Promise.resolve<UserGetDto>({
-									id: 1,
-									email: dto.email,
-								});
-							}),
+						register: jest.fn().mockImplementation((dto: RegisterDto) => {
+							return Promise.resolve<UserGetDto>({
+								id: 1,
+								email: dto.email,
+							});
+						}),
 						login: jest.fn().mockResolvedValue(accessToken),
 					},
 				},

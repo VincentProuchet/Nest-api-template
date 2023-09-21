@@ -1,7 +1,7 @@
 import { UserGetDto } from '../dto/user-get.dto';
-import { UserAuthDto } from '../dto/user-auth.dto';
+
 import { UserUpdateDto } from '../dto/user-update.dto';
-import { UserEntity } from '../repositories/user.entity';
+import { UserEntity } from '../entities/user.entity';
 
 export class UserMapper {
 	static async entityToDtoGet(

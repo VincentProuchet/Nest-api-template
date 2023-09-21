@@ -19,10 +19,10 @@ export class AuthenticationGuard implements CanActivate {
 
 	async canActivate(context: ExecutionContext): Promise<boolean> {
 		// check if custom decorator AllowAnonymous is present and authorize is true
-		const isPublic = this.reflector.getAllAndOverride<boolean>(
-			IS_PUBLIC_KEY,
-			[context.getHandler(), context.getClass()],
-		);
+		const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
+			context.getHandler(),
+			context.getClass(),
+		]);
 		if (isPublic) {
 			return true;
 		}

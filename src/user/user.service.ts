@@ -11,7 +11,7 @@ import { RegisterDto } from '../authentication/dto/register.dto';
 import { UserGetDto } from './dto/user-get.dto';
 import { UserEntity } from './entities/user.entity';
 import { UserMapper } from './mapper/user.mapper';
-import { UserAuthDto } from './dto/user-auth.dto';
+
 import { UserUpdateDto } from './dto/user-update.dto';
 import { UserDataIntegrityException } from './Exceptions/UserDataIntegrityException';
 
@@ -27,9 +27,7 @@ export class UserService {
 		const results: UserGetDto[] = [];
 
 		entities.forEach(async (userEntity: UserEntity) => {
-			results.push(
-				(await UserMapper.entityToDtoGet(userEntity)) as UserGetDto,
-			);
+			results.push((await UserMapper.entityToDtoGet(userEntity)) as UserGetDto);
 		});
 
 		return results;
@@ -87,17 +85,12 @@ export class UserService {
 					.catch(
 						// sauvegarde échoue
 						(reason: UserDataIntegrityException) => {
-							throw new HttpException(
-								reason.message,
-								HttpStatus.FORBIDDEN,
-							);
+							throw new HttpException(reason.message, HttpStatus.FORBIDDEN);
 						},
 					);
 			}) // entité non trouvée
 			.catch((reason: Error) => {
-				throw new NotFoundException(
-					' utilisateur non trouvé' + reason.message,
-				);
+				throw new NotFoundException(' utilisateur non trouvé' + reason.message);
 			});
 	}
 }

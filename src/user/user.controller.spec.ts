@@ -33,21 +33,17 @@ describe('UserController', () => {
 						getAll: jest.fn().mockResolvedValue(userArray),
 						getById: jest.fn().mockImplementation((id: number) => {
 							return Promise.resolve(
+								userArray.find((userDto: UserGetDto) => userDto.id === id) ??
+									null,
+							);
+						}),
+						getByEmail: jest.fn().mockImplementation((email: string) => {
+							return Promise.resolve(
 								userArray.find(
-									(userDto: UserGetDto) => userDto.id === id,
+									(userDto: UserGetDto) => userDto.email === email,
 								) ?? null,
 							);
 						}),
-						getByEmail: jest
-							.fn()
-							.mockImplementation((email: string) => {
-								return Promise.resolve(
-									userArray.find(
-										(userDto: UserGetDto) =>
-											userDto.email === email,
-									) ?? null,
-								);
-							}),
 					},
 				},
 			],
@@ -59,9 +55,7 @@ describe('UserController', () => {
 
 	describe('getAll', () => {
 		it('should return an array of UserGetDto', async () => {
-			expect(await userController.findAll()).toBe<UserGetDto[]>(
-				userArray,
-			);
+			expect(await userController.findAll()).toBe<UserGetDto[]>(userArray);
 		});
 	});
 

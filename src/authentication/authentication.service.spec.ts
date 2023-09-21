@@ -27,17 +27,13 @@ describe('AuthenticationService', () => {
 				{
 					provide: UserService,
 					useValue: {
-						create: jest
-							.fn()
-							.mockImplementation((dto: RegisterDto) => {
-								return Promise.resolve<UserGetDto>({
-									id: 1,
-									email: dto.email,
-								});
-							}),
-						getHashedPwdFromEmail: jest
-							.fn()
-							.mockResolvedValue(userAuthDto),
+						create: jest.fn().mockImplementation((dto: RegisterDto) => {
+							return Promise.resolve<UserGetDto>({
+								id: 1,
+								email: dto.email,
+							});
+						}),
+						getHashedPwdFromEmail: jest.fn().mockResolvedValue(userAuthDto),
 					},
 				},
 				JwtService,
@@ -67,9 +63,7 @@ describe('AuthenticationService', () => {
 				id: 1,
 				email: registerDto.email,
 			};
-			expect(await authService.register(registerDto)).toStrictEqual(
-				userDto,
-			);
+			expect(await authService.register(registerDto)).toStrictEqual(userDto);
 		});
 	});
 

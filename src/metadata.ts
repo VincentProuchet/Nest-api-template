@@ -104,8 +104,7 @@ export default async () => {
 								type: t['./user/dto/user-get.dto'].UserGetDto,
 							},
 							signIn: {
-								type: t['./authentication/dto/access-token.dto']
-									.AccessTokenDto,
+								type: t['./authentication/dto/access-token.dto'].AccessTokenDto,
 							},
 						},
 					},
