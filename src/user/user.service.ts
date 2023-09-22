@@ -61,8 +61,8 @@ export class UserService {
       email: userInfo.email,
     });
     if (user) {
-      user.firstname = userInfo.firstname;
-      user.lastname = userInfo.lastname;
+      user.firstname = userInfo.firstname === undefined ? user.firstname : userInfo.firstname;
+      user.lastname = userInfo.lastname === undefined ? user.lastname : userInfo.lastname;
 
       await this.usersRepository.save(user);
 
