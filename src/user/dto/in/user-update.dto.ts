@@ -1,4 +1,4 @@
-import { IsEmail, IsPositive } from 'class-validator';
+import { IsEmail, IsOptional, IsPositive } from 'class-validator';
 
 export class UserUpdateDto {
   @IsPositive()
@@ -7,9 +7,11 @@ export class UserUpdateDto {
   @IsEmail()
   email: string;
 
+  @IsOptional()
   /** prénom */
   firstname?: string;
 
+  @IsOptional()
   /** nom */
   lastname?: string;
 }
