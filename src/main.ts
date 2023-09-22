@@ -19,6 +19,7 @@ async function bootstrapApp() {
     .setDescription('a basic rest api built with Nest.js')
     .setVersion('1.0')
     .addBearerAuth()
+    .addSecurityRequirements('bearer')
     .build();
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('swagger', app, swaggerDocument);
