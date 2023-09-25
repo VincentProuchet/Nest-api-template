@@ -1,5 +1,6 @@
 import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import bcrypt from "bcrypt";
 
 import { RegisterDto } from './dto/in/register.dto';
 import { LoginDto } from './dto/in/login.dto';
@@ -15,8 +16,10 @@ export class AuthenticationService {
   ) {}
 
   async register(userInfo: RegisterDto): Promise<UserGetDto> {
-    if (await this.userService.getByEmail(userInfo.email))
+    if (await this.userService.getByEmail(userInfo.email)) {
       throw new ConflictException('Email already in use');
+    }
+    userInfo.password = await bcrypt.hash(userInfo.password, await bcrypt.genSalt(10));
 
     return await this.userService.create(userInfo);
   }
@@ -25,7 +28,7 @@ export class AuthenticationService {
     const foundUser: any = await this.userService.getHashedPwdFromEmail(
       userInfo.email,
     );
-    if (foundUser?.password !== userInfo.password)
+    if (!await bcrypt.compare(userInfo.password, foundUser?.password))
       throw new UnauthorizedException('Wrong email or password');
 
     const payload = { sub: foundUser.id, username: foundUser.email };
