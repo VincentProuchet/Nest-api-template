@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 import { RegisterDto } from './dto/in/register.dto';
@@ -15,6 +15,9 @@ export class AuthenticationService {
   ) {}
 
   async register(userInfo: RegisterDto): Promise<UserGetDto> {
+    if (await this.userService.getByEmail(userInfo.email))
+      throw new ConflictException('Email already in use');
+
     return await this.userService.create(userInfo);
   }
 
