@@ -72,6 +72,11 @@ export class UserService {
     }
   }
 
+  async updateUserAvatarPath(imagePath: string, userId: number): Promise<UserGetDto> {
+    console.log(imagePath);
+    return new UserGetDto();
+  }
+
   async getHashedPwdFromEmail(userEmail: string): Promise<UserAuthDto | null> {
     const userEntity: UserEntity | null = await this.usersRepository.findOneBy({
       email: userEmail,

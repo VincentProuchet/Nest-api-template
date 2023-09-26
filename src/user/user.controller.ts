@@ -8,13 +8,19 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Req,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiResponse, ApiTags, ApiBody } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { Request } from 'express';
 
 import { UserService } from './user.service';
 import { UserGetDto } from './dto/out/user-get.dto';
 import { StringEmailDto } from '../common/dto/string-email.dto';
 import { UserUpdateDto } from './dto/in/user-update.dto';
+import { multerImgOpt } from '../common/constant/multer-opt.const';
 
 @ApiBearerAuth()
 @ApiTags('user')
@@ -64,9 +70,36 @@ export class UserController {
     description: 'The updated user ',
     type: UserGetDto,
   })
-  @HttpCode(HttpStatus.ACCEPTED)
+  @HttpCode(HttpStatus.OK)
   @Put('/update')
   async update(@Body() user: UserUpdateDto): Promise<UserGetDto> {
     return await this.userService.update(user);
   }
+
+
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    description: 'Upload avatar image for a user',
+    type: UserGetDto,
+  })
+  @HttpCode(HttpStatus.OK)
+  @Post('/uploadAvatar')
+  @UseInterceptors(FileInterceptor('file', multerImgOpt))
+  async uploadAvatar(@Req() req: any, @UploadedFile() file: Express.Multer.File): Promise<UserGetDto> {
+    console.debug('userId = ' + req.user.sub);
+    console.log(file);
+    return new UserGetDto();
+  }
+
 }
