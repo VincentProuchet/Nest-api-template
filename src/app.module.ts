@@ -5,9 +5,14 @@ import { LoggerMiddleware } from './common/middleware/logger/logger.middleware';
 import { UserModule } from './user/user.module';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { dataSourceOpt } from './common/constant/datasource-opt.const';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+    }),
     TypeOrmModule.forRootAsync({
       useFactory: () => dataSourceOpt as TypeOrmModuleAsyncOptions,
     }),
