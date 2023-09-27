@@ -1,11 +1,11 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { RegisterDto } from '../authentication/dto/in/register.dto';
 import { UserGetDto } from './dto/out/user-get.dto';
 import { UserEntity } from './entities/user.entity';
-import { UserAuthDto } from './dto/out/user-auth.dto';
+import { UserAuthDto } from './dto/protected/user-auth.dto';
 import { UserUpdateDto } from './dto/in/user-update.dto';
 
 @Injectable()
@@ -40,8 +40,8 @@ export class UserService {
     return userEntity ? new UserGetDto(userEntity) : null;
   }
 
-  async create(userInfo: RegisterDto): Promise<UserGetDto> {
-    const newUser: UserEntity | null = this.usersRepository.create(userInfo);
+  async create(userDto: RegisterDto): Promise<UserGetDto> {
+    const newUser: UserEntity | null = this.usersRepository.create(userDto);
     await this.usersRepository.save(newUser);
     return new UserGetDto(newUser);
   }
@@ -50,19 +50,19 @@ export class UserService {
    * Met à jours les informations
    * d'un instance UserEntity
    * contrôle l'intégrité des données
-   * @param userInfo
+   * @param userDto
    * @returns
    */
-  async update(userInfo: UserUpdateDto): Promise<UserGetDto> {
+  async update(userDto: UserUpdateDto): Promise<UserGetDto> {
     // on fait directement une recherche avec les deux données importantes
     // qui  ne peuvent être changée en même temps que le reste
     const user: UserEntity | null = await this.usersRepository.findOneBy({
-      id: userInfo.id,
-      email: userInfo.email,
+      id: userDto.id,
+      email: userDto.email,
     });
     if (user) {
-      user.firstname = userInfo.firstname === undefined ? user.firstname : userInfo.firstname;
-      user.lastname = userInfo.lastname === undefined ? user.lastname : userInfo.lastname;
+      user.firstname = userDto.firstname === undefined ? user.firstname : userDto.firstname;
+      user.lastname = userDto.lastname === undefined ? user.lastname : userDto.lastname;
 
       await this.usersRepository.save(user);
 
@@ -90,6 +90,25 @@ export class UserService {
     }
 
     return new UserGetDto(user);
+  }
+
+  async updatePassword(userDto: UserAuthDto, resetPwdToken?: string) {
+    let user: UserEntity | null = await this.usersRepository.findOneBy({
+      id: userDto.id,
+    });
+
+    if (!user){
+      throw new BadRequestException('user to modify not found');
+    }
+    if (resetPwdToken && resetPwdToken !== user.resetPwdToken) {
+      throw new UnauthorizedException('reset token is not for specified user');
+    }
+
+    user.password = userDto.password;
+    if (user.resetPwdToken)
+      user.resetPwdToken = undefined;
+
+    await this.usersRepository.save(user);
   }
 
   async getHashedPwdFromEmail(userEmail: string): Promise<UserAuthDto | null> {

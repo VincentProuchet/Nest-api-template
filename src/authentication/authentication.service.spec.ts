@@ -5,7 +5,7 @@ import { AuthenticationService } from './authentication.service';
 import { UserService } from '../user/user.service';
 import { RegisterDto } from './dto/in/register.dto';
 import { UserGetDto } from '../user/dto/out/user-get.dto';
-import { UserAuthDto } from '../user/dto/out/user-auth.dto';
+import { UserAuthDto } from '../user/dto/protected/user-auth.dto';
 import { LoginDto } from './dto/in/login.dto';
 import { AccessTokenDto } from './dto/out/access-token.dto';
 
@@ -48,8 +48,8 @@ describe('AuthenticationService', () => {
   });
 
   it('should be defined', () => {
-    expect(process.env.JWT_SECRET).toBeDefined();
-    expect(process.env.JWT_EXPIRE).toBeDefined();
+    expect(process.env.JWT_SECRET_AUTH).toBeDefined();
+    expect(process.env.JWT_EXPIRE_AUTH).toBeDefined();
     expect(authService).toBeDefined();
     expect(userService).toBeDefined();
     expect(jwtService).toBeDefined();
@@ -81,8 +81,8 @@ describe('AuthenticationService', () => {
       const payload = { sub: userAuthDto.id, username: userAuthDto.email };
       const result: AccessTokenDto = {
         accessToken: await jwtService.signAsync(payload, {
-          secret: process.env.JWT_SECRET,
-          expiresIn: process.env.JWT_EXPIRE,
+          secret: process.env.JWT_SECRET_AUTH,
+          expiresIn: process.env.JWT_EXPIRE_AUTH,
         }),
       };
 
