@@ -48,3 +48,6 @@ environments/*.env*
 #draw.io
 *.bkp
 *.dtmp
+
+# public directory
+public

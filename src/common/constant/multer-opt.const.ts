@@ -20,8 +20,13 @@ export const multerImgOpt: MulterOptions = {
     },
     storage: diskStorage({
       destination: (req: any, file: any, cb: any) => {
-        const uploadPath = join(__dirname, '../../..', process.env.STATIC_DIRNAME!, 'images/');
-        // Create folder if doesn't exist
+        const publicPath = join(__dirname, '../../..', process.env.STATIC_DIRNAME!);
+        // Create public folder if doesn't exist
+        if (!existsSync(publicPath)) {
+            mkdirSync(publicPath);
+        }
+        const uploadPath = join(publicPath, 'images');
+        // Create images folder if doesn't exist
         if (!existsSync(uploadPath)) {
             mkdirSync(uploadPath);
         }

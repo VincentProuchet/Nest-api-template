@@ -72,9 +72,24 @@ export class UserService {
     }
   }
 
-  async updateUserAvatarPath(imagePath: string, userId: number): Promise<UserGetDto> {
-    console.log(imagePath);
-    return new UserGetDto();
+  async updateUserAvatarUrl(imagePath: string, userId: number): Promise<UserGetDto> {
+    let user: UserEntity | null = await this.usersRepository.findOneBy({
+      id: userId,
+    });
+    if (!user){
+      throw new BadRequestException('user to modify not found');
+    }
+
+    // We make sure the path has a correct format for browser url - useful on windows
+    const formatedPath: string = imagePath.replaceAll(/\\\\*/gm, "/");
+    const regexp: RegExp = /public\/\S*/g
+    const regexpResult: RegExpMatchArray | null = formatedPath.match(regexp);
+    if (regexpResult) {
+      user.avatarUrl = regexpResult[0].replace('public', '');
+      await this.usersRepository.save(user);
+    }
+
+    return new UserGetDto(user);
   }
 
   async getHashedPwdFromEmail(userEmail: string): Promise<UserAuthDto | null> {

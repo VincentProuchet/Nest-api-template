@@ -24,4 +24,7 @@ export class UserEntity {
   /** nom */
   @Column({ type: 'varchar', length: 64, nullable: true })
   lastname?: string;
+
+  @Column({name: 'avatar_url', type: 'varchar', nullable: true })
+  avatarUrl?: string;
 }

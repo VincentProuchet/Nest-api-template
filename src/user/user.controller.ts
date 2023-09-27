@@ -96,9 +96,7 @@ export class UserController {
   @Post('/uploadAvatar')
   @UseInterceptors(FileInterceptor('file', multerImgOpt))
   async uploadAvatar(@Req() req: any, @UploadedFile() file: Express.Multer.File): Promise<UserGetDto> {
-    console.debug('userId = ' + req.user.sub);
-    console.log(file);
-    return new UserGetDto();
+    return await this.userService.updateUserAvatarUrl(file.path, req.user.sub);
   }
 
 }

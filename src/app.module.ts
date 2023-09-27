@@ -11,14 +11,11 @@ import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
-    ...(process.env.STATIC_DIRNAME ? [
-      ServeStaticModule.forRoot({
-        rootPath: join(__dirname, '..', process.env.STATIC_DIRNAME),
-      })]
-      : []
-    ),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', process.env.STATIC_DIRNAME!),
+    }),
     MulterModule.register({
-      dest: './public',
+      dest: join(__dirname, '..', process.env.STATIC_DIRNAME!),
       limits: {
         fileSize: process.env.UPLOAD_MAX_FILE_SIZE ? +process.env.UPLOAD_MAX_FILE_SIZE : 5242880,
       },
