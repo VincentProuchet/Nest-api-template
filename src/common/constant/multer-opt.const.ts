@@ -8,10 +8,6 @@ import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer
 
 
 export const multerImgOpt: MulterOptions = {
-    // Limit file size
-    limits: {
-      fileSize: process.env.UPLOAD_MAX_FILE_SIZE ? +process.env.UPLOAD_MAX_FILE_SIZE : 5242880,
-    },
     fileFilter: (req: any, file: any, cb: any) => {
       // Check the mimetypes to allow for upload
       if (file.mimetype.match(/\/(jpg|jpeg|png|gif)$/)) {
@@ -24,7 +20,7 @@ export const multerImgOpt: MulterOptions = {
     },
     storage: diskStorage({
       destination: (req: any, file: any, cb: any) => {
-        const uploadPath = join(__dirname, '../../..', process.env.STATIC_DIRNAME!, 'images');
+        const uploadPath = join(__dirname, '../../..', process.env.STATIC_DIRNAME!, 'images/');
         // Create folder if doesn't exist
         if (!existsSync(uploadPath)) {
             mkdirSync(uploadPath);

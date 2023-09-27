@@ -14,7 +14,6 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiConsumes, ApiResponse, ApiTags, ApiBody } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Request } from 'express';
 
 import { UserService } from './user.service';
 import { UserGetDto } from './dto/out/user-get.dto';

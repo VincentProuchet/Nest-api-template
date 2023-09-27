@@ -7,6 +7,7 @@ import { LoggerMiddleware } from './common/middleware/logger/logger.middleware';
 import { UserModule } from './user/user.module';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { dataSourceOpt } from './common/constant/datasource-opt.const';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
@@ -16,6 +17,12 @@ import { dataSourceOpt } from './common/constant/datasource-opt.const';
       })]
       : []
     ),
+    MulterModule.register({
+      dest: './public',
+      limits: {
+        fileSize: process.env.UPLOAD_MAX_FILE_SIZE ? +process.env.UPLOAD_MAX_FILE_SIZE : 5242880,
+      },
+    }),
     TypeOrmModule.forRootAsync({
       useFactory: () => dataSourceOpt as TypeOrmModuleAsyncOptions,
     }),
