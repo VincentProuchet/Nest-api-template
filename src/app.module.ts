@@ -8,6 +8,8 @@ import { UserModule } from './user/user.module';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { dataSourceOpt } from './common/constant/datasource-opt.const';
 import { MulterModule } from '@nestjs/platform-express';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 
 @Module({
   imports: [
@@ -22,6 +24,22 @@ import { MulterModule } from '@nestjs/platform-express';
     }),
     TypeOrmModule.forRootAsync({
       useFactory: () => dataSourceOpt as TypeOrmModuleAsyncOptions,
+    }),
+
+    MailerModule.forRootAsync({
+      useFactory: () => ({
+        transport: `smtps://${process.env.MAIL_SENDER}:${process.env.MAIL_SENDER_PASSWORD}@smtp.${process.env.MAIL_SENDER_DOMAIN}`,
+        defaults: {
+          from: `"nest-modules" <${process.env.MAIL_ACCOUNT_SENDER}>`,
+        },
+        template: {
+          dir: join(__dirname, '/templates'),
+          adapter: new HandlebarsAdapter(),
+          options: {
+            strict: true,
+          },
+        },
+      }),
     }),
     UserModule,
     AuthenticationModule,
