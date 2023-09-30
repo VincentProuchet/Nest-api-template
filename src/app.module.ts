@@ -25,21 +25,8 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
     TypeOrmModule.forRootAsync({
       useFactory: () => dataSourceOpt as TypeOrmModuleAsyncOptions,
     }),
-
     MailerModule.forRootAsync({
-      useFactory: () => ({
-        transport: `smtps://${process.env.MAIL_SENDER}:${process.env.MAIL_SENDER_PASSWORD}@smtp.${process.env.MAIL_SENDER_DOMAIN}`,
-        defaults: {
-          from: `"nest-modules" <${process.env.MAIL_ACCOUNT_SENDER}>`,
-        },
-        template: {
-          dir: join(__dirname, '/templates'),
-          adapter: new HandlebarsAdapter(),
-          options: {
-            strict: true,
-          },
-        },
-      }),
+      useFactory: () => (AppModule.getMailerModule()),
     }),
     UserModule,
     AuthenticationModule,
@@ -51,4 +38,24 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(LoggerMiddleware).forRoutes('');
   }
+  /**
+   * j'ai préféré le déplacer plus bas pour ne pas encombre la liste des modules avec du code
+   * @returns un objet de configuration pour MailerModule
+   */
+  static getMailerModule() {
+    return {
+      transport: `smtps://${process.env.MAIL_SENDER}:${process.env.MAIL_SENDER_PASSWORD}@smtp.${process.env.MAIL_SENDER_DOMAIN}`,
+      defaults: {
+        from: `"nest-modules" <${process.env.MAIL_ACCOUNT_SENDER}>`,
+      },
+      template: {
+        dir: join(__dirname, `/${process.env.MAIL_TEMPLATE_DIRECTORY}`),
+        adapter: new HandlebarsAdapter(),
+        options: {
+          strict: true,
+        },
+      },
+    }
+  }
+
 }
