@@ -1,4 +1,4 @@
-import { PasswordTokenEntity } from "./Password.token.entity";
+import { PasswordTokenEntity } from "./password.token.entity";
 
 describe('ResetPasswordToken', () => {
   it('should be defined', () => {

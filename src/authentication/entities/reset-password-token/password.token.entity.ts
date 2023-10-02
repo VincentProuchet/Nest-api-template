@@ -1,6 +1,6 @@
-import { type } from "os";
+
 import { UserEntity } from "src/user/entities/user.entity";
-import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryColumn } from "typeorm";
+import { CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryColumn } from "typeorm";
 @Entity({
   name: 'reset_password_token',
   orderBy: {

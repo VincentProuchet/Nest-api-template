@@ -7,7 +7,8 @@ import { AuthenticationService } from './authentication.service';
 import { UserModule } from '../user/user.module';
 import { AuthenticationGuard } from './authentication.guard';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PasswordTokenEntity } from './entities/reset-password-token/Password.token.entity';
+import { PasswordTokenEntity } from './entities/reset-password-token/password.token.entity';
+
 
 @Module({
   imports: [

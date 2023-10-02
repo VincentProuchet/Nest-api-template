@@ -1,6 +1,5 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
-import { error } from 'console';
 import { UserEntity } from 'src/user/entities/user.entity';
 /**
  * service d'envoi des emails
@@ -36,10 +35,6 @@ export class MailService {
         token: token
       }
     })
-      .catch((error) => {
-
-      })
-
   }
 
   public sendValidateAccount(): void {
