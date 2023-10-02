@@ -11,7 +11,6 @@ import { MulterModule } from '@nestjs/platform-express';
 import { MailerModule, MailerOptions } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { MailModule } from './mail/mail.module';
-import { MailerAsyncOptions } from '@nestjs-modules/mailer/dist/interfaces/mailer-async-options.interface';
 
 @Module({
   imports: [
