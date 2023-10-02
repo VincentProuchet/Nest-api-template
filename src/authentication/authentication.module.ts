@@ -7,7 +7,7 @@ import { AuthenticationService } from './authentication.service';
 import { UserModule } from '../user/user.module';
 import { AuthenticationGuard } from './authentication.guard';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PasswordTokenEntity } from './entities/reset-password-token/password.token.entity';
+import { PasswordResetEntity } from './entities/reset-password-token/password.reset.entity';
 
 
 @Module({
@@ -16,7 +16,7 @@ import { PasswordTokenEntity } from './entities/reset-password-token/password.to
     JwtModule.register({
       global: true,
     }),
-    TypeOrmModule.forFeature([PasswordTokenEntity])
+    TypeOrmModule.forFeature([PasswordResetEntity])
   ],
   controllers: [AuthenticationController],
   providers: [
