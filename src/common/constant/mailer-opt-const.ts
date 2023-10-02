@@ -7,20 +7,32 @@ import { join } from "path";
  */
 export const mailerOpt: MailerOptions = {
   transport: {
-    host: process.env.MAIL_SMTP_HOST,
-    port: process.env.MAIL_SMTP_PORT,
-    ignoreTLS: process.env.MAIL_IGNORETLS ? true : false,
-    secure: process.env.MAIL_SECURE ? true : false,
+    className: 'smtp',// process.env.MAIL_DRIVER,
+    host: '127.0.0.1',// process.env.MAIL_SMTP_HOST,
+    port: 1025,// process.env.MAIL_SMTP_PORT,
+    secure: false,//process.env.MAIL_SECURE ? true : false,
+    secureConnexion: false,
+    ignoreTLS: true, //process.env.MAIL_IGNORETLS ? true : false,
+    logger: true,
+    debug: true,
+    tls: {
+      rejectUnauthorized: false,
+    },
+    timeout: 30,
 
-    ...(
-      mailerOptAuth()
-    ),
+    client: null,
+    auth: {
+      user: 'project.1',
+      pass: 'secret.1'
+
+      // user: process.env.MAIL_SMTP_USER,
+      // pass: process.env.MAIL_SMTP_PASSWORD,
+    },
 
   },
   defaults: {
     from: `"nest-modules" <${process.env.MAIL_ACCOUNT_SENDER!}>`,
   },
-  preview: process.env.MAIL_PREVIEW ? true : false,
   template: {
     dir: join(__dirname, '..', '..', `${process.env.MAIL_TEMPLATE_DIRECTORY}`),
     adapter: new HandlebarsAdapter(),
@@ -29,17 +41,3 @@ export const mailerOpt: MailerOptions = {
     },
   },
 };
-
-
-function mailerOptAuth() {
-  if (process.env.MAIL_SECURE) {
-
-    return {
-      auth: {
-        user: process.env.MAIL_SMTP_USER,
-        pass: process.env.MAIL_SMTP_PASSWORD,
-      }
-    };
-  }
-  return;
-}

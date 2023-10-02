@@ -14,7 +14,7 @@ export class MailService {
    * @param email 
    * @param token 
    */
-  public sendResetPassword(email: string, token: string): void {
+  public sendResetPassword(email: string, token: string) {
     /**
         un bloc try and catch ne fonctionneraient pas ici
         et comme la fonction ne retourne rien
@@ -33,5 +33,8 @@ export class MailService {
         token
       }
     })
+      .catch((error) => {
+        console.log(error);
+      })
   }
 }
