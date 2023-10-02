@@ -9,8 +9,8 @@ import { AuthenticationModule } from './authentication/authentication.module';
 import { dataSourceOpt } from './common/constant/datasource-opt.const';
 import { MulterModule } from '@nestjs/platform-express';
 import { MailerModule, MailerOptions } from '@nestjs-modules/mailer';
-import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { MailModule } from './mail/mail.module';
+import { mailerOpt } from './common/constant/mailer-opt-const';
 
 @Module({
   imports: [
@@ -27,7 +27,7 @@ import { MailModule } from './mail/mail.module';
       useFactory: () => dataSourceOpt as TypeOrmModuleAsyncOptions,
     }),
     MailerModule.forRootAsync({
-      useFactory: () => (AppModule.getMailerModule()),
+      useFactory: () => (mailerOpt),
     }),
     UserModule,
     AuthenticationModule,
@@ -39,36 +39,6 @@ import { MailModule } from './mail/mail.module';
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(LoggerMiddleware).forRoutes('');
-  }
-  /**
-   * j'ai préféré déplacer la configuration de mailer
-    plus bas pour ne pas encombrer la liste des modules avec du code
-   * @returns un objet de configuration pour MailerModule
-   */
-  static getMailerModule(): MailerOptions {
-    return {
-      transport: {
-        host: process.env.MAIL_HOST,
-        port: process.env.MAIL_PORT,
-        ignoreTLS: process.env.MAIL_IGNORETLS ? true : false,
-        secure: process.env.MAIL_SECURE ? true : false,
-        auth: {
-          user: process.env.MAIL_SENDER,
-          pass: process.env.MAIL_SENDER_PASSWORD,
-        },
-      },
-      defaults: {
-        from: `"nest-modules" <${process.env.MAIL_ACCOUNT_SENDER!}>`,
-      },
-      preview: process.env.MAIL_PREVIEW ? true : false,
-      template: {
-        dir: join(__dirname, `/${process.env.MAIL_TEMPLATE_DIRECTORY}`),
-        adapter: new HandlebarsAdapter(),
-        options: {
-          strict: true,
-        },
-      },
-    };
   }
 
 }
