@@ -7,6 +7,8 @@ import { LoginDto } from './dto/in/login.dto';
 import { AllowAnonymous } from '../common/decorator/allow-anonymous.decorator';
 import { UserGetDto } from 'src/user/dto/out/user-get.dto';
 import { AccessTokenDto } from 'src/authentication/dto/out/access-token.dto';
+import { StringEmailDto } from 'src/common/dto/string-email.dto';
+import { ResetPwdDto } from './dto/in/reset-password.dto';
 
 @ApiTags('auth')
 @AllowAnonymous()
@@ -23,5 +25,17 @@ export class AuthenticationController {
   @Post('/signIn')
   async signIn(@Body() userInfo: LoginDto): Promise<AccessTokenDto> {
     return await this.authService.login(userInfo);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('/forgotPwd')
+  async forgotPwd(@Body() stringEmailDto: StringEmailDto): Promise<void> {
+    await this.authService.sendForgotPwdEmail(stringEmailDto.email);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('/resetPwd')
+  async resetPwd(@Body() stringPwdDto: ResetPwdDto): Promise<void> {
+    await this.authService.resetPassword(stringPwdDto);
   }
 }

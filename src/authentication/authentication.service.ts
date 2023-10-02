@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import bcrypt from "bcrypt";
 
@@ -7,6 +7,9 @@ import { LoginDto } from './dto/in/login.dto';
 import { UserService } from '../user/user.service';
 import { UserGetDto } from '../user/dto/out/user-get.dto';
 import { AccessTokenDto } from './dto/out/access-token.dto';
+import { JwtPayloadDto } from './dto/protected/jwt-payload-auth.dto';
+import { UserAuthDto } from 'src/user/dto/protected/user-auth.dto';
+import { ResetPwdDto } from './dto/in/reset-password.dto';
 
 @Injectable()
 export class AuthenticationService {
@@ -15,30 +18,65 @@ export class AuthenticationService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async register(userInfo: RegisterDto): Promise<UserGetDto> {
-    if (await this.userService.getByEmail(userInfo.email)) {
+  async register(registerDto: RegisterDto): Promise<UserGetDto> {
+    if (await this.userService.getByEmail(registerDto.email)) {
       throw new ConflictException('Email already in use');
     }
-    userInfo.password = await bcrypt.hash(userInfo.password, await bcrypt.genSalt(10));
+    registerDto.password = await bcrypt.hash(registerDto.password, await bcrypt.genSalt(10));
 
-    return await this.userService.create(userInfo);
+    return await this.userService.create(registerDto);
   }
 
-  async login(userInfo: LoginDto): Promise<AccessTokenDto> {
-    const foundUser: any = await this.userService.getHashedPwdFromEmail(
-      userInfo.email,
+  async login(loginDto: LoginDto): Promise<AccessTokenDto> {
+    const foundUser: UserAuthDto | null = await this.userService.getHashedPwdFromEmail(
+      loginDto.email,
     );
-    if (!await bcrypt.compare(userInfo.password, foundUser?.password))
+    if (!foundUser || !await bcrypt.compare(loginDto.password, foundUser.password))
       throw new UnauthorizedException('Wrong email or password');
 
-    const payload = { sub: foundUser.id, username: foundUser.email };
+    const payload: JwtPayloadDto = { userId: foundUser.id, userEmail: foundUser.email };
     const response: AccessTokenDto = {
-      accessToken: await this.jwtService.signAsync(payload, {
-        secret: process.env.JWT_SECRET,
-        expiresIn: process.env.JWT_EXPIRE,
-      }),
+      accessToken: await this.generateJWT(payload),
     };
 
     return response;
+  }
+
+  async sendForgotPwdEmail(userEmail: string): Promise<void> {
+    const user: UserGetDto | null = await this.userService.getByEmail(userEmail);
+    if (user) {
+      const payload: JwtPayloadDto = { userId: user.id, userEmail: user.email }
+      const resetJWT: string = await this.generateJWT(payload, false);
+
+      // TODO: send email containing url with jwt redirecting to front-end reset password page
+      // TODO: update user resetPwdToken
+    }
+  }
+
+  async resetPassword(resetPwdDto: ResetPwdDto): Promise<void> {
+    let payload: JwtPayloadDto;
+
+    try {
+       payload = await this.jwtService.verifyAsync(resetPwdDto.token, {
+        secret: process.env.JWT_SECRET_PWD_RESET,
+      });
+    }
+    catch {
+      throw new UnauthorizedException('reset token is invalid');
+    }
+
+    const updatedUser: UserAuthDto = {
+      id: payload.userId,
+      email: payload.userEmail,
+      password: await bcrypt.hash(resetPwdDto.password, await bcrypt.genSalt(10))
+    }
+    await this.userService.updatePassword(updatedUser, resetPwdDto.token);
+  }
+
+  private async generateJWT(payload: JwtPayloadDto, isAuth: boolean = true): Promise<string> {
+    return await this.jwtService.signAsync(payload, {
+      secret: isAuth ? process.env.JWT_SECRET_AUTH : process.env.JWT_SECRET_PWD_RESET,
+      expiresIn: isAuth ? process.env.JWT_EXPIRE_AUTH : process.env.JWT_EXPIRE_PWD_RESET,
+    })
   }
 }

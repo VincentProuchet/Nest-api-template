@@ -17,8 +17,8 @@ describe('AuthenticationGuard', () => {
   });
 
   it('should be defined', () => {
-    expect(process.env.JWT_SECRET).toBeDefined();
-    expect(process.env.JWT_EXPIRE).toBeDefined();
+    expect(process.env.JWT_SECRET_AUTH).toBeDefined();
+    expect(process.env.JWT_EXPIRE_AUTH).toBeDefined();
     expect(authGuard).toBeDefined();
   });
 
@@ -26,8 +26,8 @@ describe('AuthenticationGuard', () => {
     const token: string = await jwtService.signAsync(
       { sub: 1, username: 'foo@bar.com' },
       {
-        secret: process.env.JWT_SECRET,
-        expiresIn: process.env.JWT_EXPIRE,
+        secret: process.env.JWT_SECRET_AUTH,
+        expiresIn: process.env.JWT_EXPIRE_AUTH,
       },
     );
 

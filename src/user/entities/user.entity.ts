@@ -27,4 +27,7 @@ export class UserEntity {
 
   @Column({name: 'avatar_url', type: 'varchar', nullable: true })
   avatarUrl?: string;
+
+  @Column({name: 'reset_password_token', type: 'varchar', nullable: true })
+  resetPwdToken?: string;
 }
