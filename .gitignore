@@ -51,3 +51,6 @@ environments/*.env*
 
 # public directory
 public
+
+# mail template mock data
+*.hbs.json

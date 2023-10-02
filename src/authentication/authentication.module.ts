@@ -6,6 +6,8 @@ import { AuthenticationController } from './authentication.controller';
 import { AuthenticationService } from './authentication.service';
 import { UserModule } from '../user/user.module';
 import { AuthenticationGuard } from './authentication.guard';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { PasswordTokenEntity } from './entities/reset-password-token/Password.token.entity';
 
 @Module({
   imports: [
@@ -13,6 +15,7 @@ import { AuthenticationGuard } from './authentication.guard';
     JwtModule.register({
       global: true,
     }),
+    TypeOrmModule.forFeature([PasswordTokenEntity])
   ],
   controllers: [AuthenticationController],
   providers: [
@@ -23,4 +26,4 @@ import { AuthenticationGuard } from './authentication.guard';
     },
   ],
 })
-export class AuthenticationModule {}
+export class AuthenticationModule { }
