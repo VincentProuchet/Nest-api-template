@@ -1,20 +1,21 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post, Req } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { AuthenticationService } from './authentication.service';
 import { RegisterDto } from './dto/in/register.dto';
 import { LoginDto } from './dto/in/login.dto';
 import { AllowAnonymous } from '../common/decorator/allow-anonymous.decorator';
-import { UserGetDto } from 'src/user/dto/out/user-get.dto';
-import { AccessTokenDto } from 'src/authentication/dto/out/access-token.dto';
-import { StringEmailDto } from 'src/common/dto/string-email.dto';
+import { UserGetDto } from '../user/dto/out/user-get.dto';
+import { AccessTokenDto } from '../authentication/dto/out/access-token.dto';
+import { StringEmailDto } from '../common/dto/string-email.dto';
 import { ResetPwdDto } from './dto/in/reset-password.dto';
+import { Request } from 'express';
 
 @ApiTags('auth')
 @AllowAnonymous()
 @Controller('auth')
 export class AuthenticationController {
-  constructor(private readonly authService: AuthenticationService) {}
+  constructor(private readonly authService: AuthenticationService) { }
 
   @Post('/signUp')
   async signUp(@Body() userInfo: RegisterDto): Promise<UserGetDto> {
@@ -35,7 +36,8 @@ export class AuthenticationController {
 
   @HttpCode(HttpStatus.OK)
   @Post('/resetPwd')
-  async resetPwd(@Body() stringPwdDto: ResetPwdDto): Promise<void> {
+  async resetPwd(@Body() stringPwdDto: ResetPwdDto, @Req() request: Request): Promise<void> {
+    request.headers.host;
     await this.authService.resetPassword(stringPwdDto);
   }
 }

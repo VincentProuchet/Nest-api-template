@@ -11,10 +11,11 @@ export const mailerOpt: MailerOptions = {
     port: process.env.MAIL_SMTP_PORT,
     ignoreTLS: process.env.MAIL_IGNORETLS ? true : false,
     secure: process.env.MAIL_SECURE ? true : false,
-    auth: {
-      user: process.env.MAIL_SMTP_USER,
-      pass: process.env.MAIL_SMTP_PASSWORD,
-    },
+
+    ...(
+      mailerOptAuth()
+    ),
+
   },
   defaults: {
     from: `"nest-modules" <${process.env.MAIL_ACCOUNT_SENDER!}>`,
@@ -28,3 +29,17 @@ export const mailerOpt: MailerOptions = {
     },
   },
 };
+
+
+function mailerOptAuth() {
+  if (process.env.MAIL_SECURE) {
+
+    return {
+      auth: {
+        user: process.env.MAIL_SMTP_USER,
+        pass: process.env.MAIL_SMTP_PASSWORD,
+      }
+    };
+  }
+  return;
+}

@@ -1,19 +1,20 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
-import { UserEntity } from 'src/user/entities/user.entity';
+import { MailTemplateEnum } from '../common/constant/enums/mail-template.enum';
 /**
  * service d'envoi des emails
  */
 @Injectable()
 export class MailService {
 
+
   constructor(private mailerService: MailerService) { }
   /**
    * envoi un email de 
-   * @param user 
+   * @param email 
    * @param token 
    */
-  public sendResetPassword(user: UserEntity, token: string): void {
+  public sendResetPassword(email: string, token: string): void {
     /**
         un bloc try and catch ne fonctionneraient pas ici
         et comme la fonction ne retourne rien
@@ -23,23 +24,14 @@ export class MailService {
     */
 
     this.mailerService.sendMail({
-      to: user.email,
+      to: email,
       from: 'noreply@nestjs.com', // sender address
       subject: 'Testing Nest MailerModule ✔', // Subject line
-      template: 'resetPassord', // l'extension est ajoutée automatiquement
+      template: MailTemplateEnum.resetPassword, // l'extension est ajoutée automatiquement
       context: {
-        user: {
-          name: user.lastname,
-          firstname: user.firstname
-        },
-        token: token
+        email,
+        token
       }
     })
   }
-
-  public sendValidateAccount(): void {
-
-
-  }
-
 }

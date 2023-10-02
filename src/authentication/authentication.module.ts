@@ -7,7 +7,8 @@ import { AuthenticationService } from './authentication.service';
 import { UserModule } from '../user/user.module';
 import { AuthenticationGuard } from './authentication.guard';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PasswordResetEntity } from './entities/reset-password-token/password.reset.entity';
+import { MailModule } from '../mail/mail.module';
+
 
 
 @Module({
@@ -16,7 +17,7 @@ import { PasswordResetEntity } from './entities/reset-password-token/password.re
     JwtModule.register({
       global: true,
     }),
-    TypeOrmModule.forFeature([PasswordResetEntity])
+    MailModule
   ],
   controllers: [AuthenticationController],
   providers: [

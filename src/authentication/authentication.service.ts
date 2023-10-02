@@ -8,15 +8,17 @@ import { UserService } from '../user/user.service';
 import { UserGetDto } from '../user/dto/out/user-get.dto';
 import { AccessTokenDto } from './dto/out/access-token.dto';
 import { JwtPayloadDto } from './dto/protected/jwt-payload-auth.dto';
-import { UserAuthDto } from 'src/user/dto/protected/user-auth.dto';
+import { UserAuthDto } from '../user/dto/protected/user-auth.dto';
 import { ResetPwdDto } from './dto/in/reset-password.dto';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class AuthenticationService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
-  ) {}
+    private readonly mailService: MailService
+  ) { }
 
   async register(registerDto: RegisterDto): Promise<UserGetDto> {
     if (await this.userService.getByEmail(registerDto.email)) {
@@ -48,8 +50,9 @@ export class AuthenticationService {
       const payload: JwtPayloadDto = { userId: user.id, userEmail: user.email }
       const resetJWT: string = await this.generateJWT(payload, false);
 
-      // TODO: send email containing url with jwt redirecting to front-end reset password page
-      // TODO: update user resetPwdToken
+      if (await this.userService.updatePasswordToken(user.id, resetJWT)) {
+        this.mailService.sendResetPassword(userEmail, resetJWT);
+      }
     }
   }
 
@@ -57,7 +60,7 @@ export class AuthenticationService {
     let payload: JwtPayloadDto;
 
     try {
-       payload = await this.jwtService.verifyAsync(resetPwdDto.token, {
+      payload = await this.jwtService.verifyAsync(resetPwdDto.token, {
         secret: process.env.JWT_SECRET_PWD_RESET,
       });
     }
