@@ -13,7 +13,7 @@ export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private usersRepository: Repository<UserEntity>,
-  ) {}
+  ) { }
 
   async getAll(): Promise<UserGetDto[]> {
     const entities: UserEntity[] = await this.usersRepository.find();
@@ -76,7 +76,7 @@ export class UserService {
     let user: UserEntity | null = await this.usersRepository.findOneBy({
       id: userId,
     });
-    if (!user){
+    if (!user) {
       throw new BadRequestException('user to modify not found');
     }
 
@@ -97,7 +97,7 @@ export class UserService {
       id: userDto.id,
     });
 
-    if (!user){
+    if (!user) {
       throw new BadRequestException('user to modify not found');
     }
     if (resetPwdToken && resetPwdToken !== user.resetPwdToken) {
@@ -110,6 +110,16 @@ export class UserService {
 
     await this.usersRepository.save(user);
   }
+  async updatePasswordToken(userId: number, token: string): Promise<boolean> {
+    let user: UserEntity | null = await this.usersRepository.findOneBy({
+      id: userId
+    });
+    if (!user) return false;
+    user.resetPwdToken = token;
+    this.usersRepository.save(user);
+    return true;
+
+  }
 
   async getHashedPwdFromEmail(userEmail: string): Promise<UserAuthDto | null> {
     const userEntity: UserEntity | null = await this.usersRepository.findOneBy({
@@ -117,4 +127,5 @@ export class UserService {
     });
     return userEntity ? new UserAuthDto(userEntity) : null;
   }
+
 }

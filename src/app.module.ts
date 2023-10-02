@@ -8,6 +8,9 @@ import { UserModule } from './user/user.module';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { dataSourceOpt } from './common/constant/datasource-opt.const';
 import { MulterModule } from '@nestjs/platform-express';
+import { MailerModule, MailerOptions } from '@nestjs-modules/mailer';
+import { MailModule } from './mail/mail.module';
+import { mailerOpt } from './common/constant/mailer-opt-const';
 
 @Module({
   imports: [
@@ -23,8 +26,12 @@ import { MulterModule } from '@nestjs/platform-express';
     TypeOrmModule.forRootAsync({
       useFactory: () => dataSourceOpt as TypeOrmModuleAsyncOptions,
     }),
+    MailerModule.forRootAsync({
+      useFactory: () => (mailerOpt),
+    }),
     UserModule,
     AuthenticationModule,
+    MailModule,
   ],
   controllers: [],
   providers: [],
@@ -33,4 +40,5 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(LoggerMiddleware).forRoutes('');
   }
+
 }
