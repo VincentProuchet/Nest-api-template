@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, Req } from '@nestjs/common';
+import { Body, Controller, Headers, HttpCode, HttpStatus, Post, Req, Request } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { AuthenticationService } from './authentication.service';
@@ -9,12 +9,14 @@ import { UserGetDto } from '../user/dto/out/user-get.dto';
 import { AccessTokenDto } from '../authentication/dto/out/access-token.dto';
 import { StringEmailDto } from '../common/dto/string-email.dto';
 import { ResetPwdDto } from './dto/in/reset-password.dto';
-import { Request } from 'express';
 
 @ApiTags('auth')
 @AllowAnonymous()
 @Controller('auth')
 export class AuthenticationController {
+
+  private new_password_controler = "new-password";
+
   constructor(private readonly authService: AuthenticationService) { }
 
   @Post('/signUp')
@@ -27,17 +29,24 @@ export class AuthenticationController {
   async signIn(@Body() userInfo: LoginDto): Promise<AccessTokenDto> {
     return await this.authService.login(userInfo);
   }
-
+  /**
+   * controleur pour démarrer la procedure de ré-initialisation de mot de passe
+   * l'utilisateur ne doit fournir que un email 
+   * @param stringEmailDto 
+   * @param referrer récupéré automatiquement 
+   * addresse du frontend
+   */
   @HttpCode(HttpStatus.OK)
   @Post('/forgotPwd')
-  async forgotPwd(@Body() stringEmailDto: StringEmailDto): Promise<void> {
-    await this.authService.sendForgotPwdEmail(stringEmailDto.email);
+  async forgotPwd(@Body() stringEmailDto: StringEmailDto, @Headers('host') referrer: string = ""): Promise<void> {
+    console.log(referrer);
+    await this.authService.sendForgotPwdEmail(stringEmailDto.email, referrer, this.new_password_controler);
   }
 
   @HttpCode(HttpStatus.OK)
   @Post('/resetPwd')
   async resetPwd(@Body() stringPwdDto: ResetPwdDto, @Req() request: Request): Promise<void> {
-    request.headers.host;
+    //request.headers.host;
     await this.authService.resetPassword(stringPwdDto);
   }
 }

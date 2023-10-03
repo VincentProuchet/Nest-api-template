@@ -39,5 +39,13 @@ export const mailerOpt: MailerOptions = {
     options: {
       strict: true,
     },
+
+  }, options: {
+    partials: {
+      dir: join(__dirname, '..', '..', `${process.env.MAIL_TEMPLATE_DIRECTORY}/partials`),
+      options: {
+        strict: true,
+      },
+    },
   },
 };

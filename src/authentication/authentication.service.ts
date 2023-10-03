@@ -44,14 +44,14 @@ export class AuthenticationService {
     return response;
   }
 
-  async sendForgotPwdEmail(userEmail: string): Promise<void> {
+  async sendForgotPwdEmail(userEmail: string, host: string, controler: string): Promise<void> {
     const user: UserGetDto | null = await this.userService.getByEmail(userEmail);
     if (user) {
       const payload: JwtPayloadDto = { userId: user.id, userEmail: user.email }
       const resetJWT: string = await this.generateJWT(payload, false);
 
       if (await this.userService.updatePasswordToken(user.id, resetJWT)) {
-        this.mailService.sendResetPassword(userEmail, resetJWT);
+        this.mailService.sendResetPassword(userEmail, resetJWT, host, controler);
       }
     }
   }

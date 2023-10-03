@@ -6,15 +6,13 @@ import { MailTemplateEnum } from '../common/constant/enums/mail-template.enum';
  */
 @Injectable()
 export class MailService {
-
-
   constructor(private mailerService: MailerService) { }
   /**
    * envoi un email de 
    * @param email 
    * @param token 
    */
-  public sendResetPassword(email: string, token: string) {
+  public sendResetPassword(email: string, token: string, host: string, controler: string) {
     /**
         un bloc try and catch ne fonctionneraient pas ici
         et comme la fonction ne retourne rien
@@ -29,6 +27,8 @@ export class MailService {
       subject: 'Testing Nest MailerModule ✔', // Subject line
       template: MailTemplateEnum.resetPassword, // l'extension est ajoutée automatiquement
       context: {
+        host,
+        controler,
         email,
         token
       }
