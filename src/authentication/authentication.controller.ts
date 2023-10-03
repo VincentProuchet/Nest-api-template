@@ -1,4 +1,4 @@
-import { Body, Controller, Headers, HttpCode, HttpStatus, Post, Req, Request } from '@nestjs/common';
+import { BadRequestException, Body, Controller, HttpCode, HttpStatus, Post, Req } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { AuthenticationService } from './authentication.service';
@@ -9,6 +9,7 @@ import { UserGetDto } from '../user/dto/out/user-get.dto';
 import { AccessTokenDto } from '../authentication/dto/out/access-token.dto';
 import { StringEmailDto } from '../common/dto/string-email.dto';
 import { ResetPwdDto } from './dto/in/reset-password.dto';
+import { Request } from 'express';
 
 @ApiTags('auth')
 @AllowAnonymous()
@@ -33,14 +34,16 @@ export class AuthenticationController {
    * controleur pour démarrer la procedure de ré-initialisation de mot de passe
    * l'utilisateur ne doit fournir que un email 
    * @param stringEmailDto 
-   * @param referrer récupéré automatiquement 
-   * addresse du frontend
+   * @param request
    */
   @HttpCode(HttpStatus.OK)
   @Post('/forgotPwd')
-  async forgotPwd(@Body() stringEmailDto: StringEmailDto, @Headers('host') referrer: string = ""): Promise<void> {
-    console.log(referrer);
-    await this.authService.sendForgotPwdEmail(stringEmailDto.email, referrer, this.new_password_controler);
+  async forgotPwd(@Body() stringEmailDto: StringEmailDto, @Req() request: Request): Promise<void> {
+    const header = request.headers;
+    console.log(header);
+    if (!header.referer) throw new BadRequestException("le headers n'a pas la forme correcte");
+
+    await this.authService.sendForgotPwdEmail(stringEmailDto.email, header.referer, this.new_password_controler);
   }
 
   @HttpCode(HttpStatus.OK)
