@@ -1,6 +1,7 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
 import { MailTemplateEnum } from '../common/constant/enums/mail-template.enum';
+import { Charsets } from 'mysql2';
 /**
  * service d'envoi des emails
  */
@@ -8,24 +9,20 @@ import { MailTemplateEnum } from '../common/constant/enums/mail-template.enum';
 export class MailService {
   constructor(private mailerService: MailerService) { }
   /**
-   * envoi un email de 
-   * @param email 
-   * @param token 
+   * envoi un email de réinitialisation de mot de passe
+   * @param email envoyé à 
+   * @param token jeton de réinitialisation
+   * @param host adresse de la page au front-end
+   * @param controler controler du front-end
    */
   public sendResetPassword(email: string, token: string, host: string, controler: string) {
-    /**
-        un bloc try and catch ne fonctionneraient pas ici
-        et comme la fonction ne retourne rien
-        il serait inutile de forcer une attente
-        de toute manière la fonction n'est pas déclarée async
-        donc le reste du code vas ettendre la fin de la promesse
-    */
-
     this.mailerService.sendMail({
+
       to: email,
-      from: 'noreply@nestjs.com', // sender address
-      subject: 'Testing Nest MailerModule ✔', // Subject line
+      from: `account password control<${process.env.MAIL_ACCOUNT_SENDER}>`, // sender address
+      subject: 'Réinitialisation de votre mot de passe demandée', // Subject line
       template: MailTemplateEnum.resetPassword, // l'extension est ajoutée automatiquement
+      encoding: "utf-8",
       context: {
         host,
         controler,
@@ -35,6 +32,7 @@ export class MailService {
     })
       .catch((error) => {
         console.log(error);
+
       })
   }
 }

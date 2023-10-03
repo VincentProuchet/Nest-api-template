@@ -1,39 +1,31 @@
 import { MailerOptions } from "@nestjs-modules/mailer";
 import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter";
 import { join } from "path";
+import { nodeEnvEnum } from "./enums/node-env.enum";
 /**
  * configuration mailer 
  * 
  */
 export const mailerOpt: MailerOptions = {
   transport: {
-    className: 'smtp',// process.env.MAIL_DRIVER,
-    host: '127.0.0.1',// process.env.MAIL_SMTP_HOST,
-    port: 1025,// process.env.MAIL_SMTP_PORT,
-    secure: false,//process.env.MAIL_SECURE ? true : false,
-    secureConnexion: false,
-    ignoreTLS: true, //process.env.MAIL_IGNORETLS ? true : false,
-    logger: true,
-    debug: true,
-    tls: {
-      rejectUnauthorized: false,
-    },
-    timeout: 30,
-
-    client: null,
+    className: process.env.MAIL_DRIVER,
+    host: process.env.MAIL_SMTP_HOST,
+    port: process.env.MAIL_SMTP_PORT,
     auth: {
-      user: 'project.1',
-      pass: 'secret.1'
-
-      // user: process.env.MAIL_SMTP_USER,
-      // pass: process.env.MAIL_SMTP_PASSWORD,
+      user: process.env.MAIL_SMTP_USER,
+      pass: process.env.MAIL_SMTP_PASSWORD,
     },
+
+    secure: process.env.NODE_ENV == nodeEnvEnum.development ? false : true,
+    logger: process.env.NODE_ENV == nodeEnvEnum.development ? true : false,
+    debug: process.env.NODE_ENV == nodeEnvEnum.development ? true : false,
 
   },
   defaults: {
-    from: `"nest-modules" <${process.env.MAIL_ACCOUNT_SENDER!}>`,
+    from: `nest-modules<${process.env.MAIL_ACCOUNT_SENDER!}>`,
   },
   template: {
+
     dir: join(__dirname, '..', '..', `${process.env.MAIL_TEMPLATE_DIRECTORY}`),
     adapter: new HandlebarsAdapter(),
     options: {
@@ -42,7 +34,7 @@ export const mailerOpt: MailerOptions = {
 
   }, options: {
     partials: {
-      dir: join(__dirname, '..', '..', `${process.env.MAIL_TEMPLATE_DIRECTORY}/partials`),
+      dir: join(__dirname, '..', '..', `${process.env.MAIL_TEMPLATE_DIRECTORY}`, `${process.env.MAIL_PARTIAL_DIRECTORY}`),
       options: {
         strict: true,
       },
