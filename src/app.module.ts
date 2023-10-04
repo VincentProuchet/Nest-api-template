@@ -11,6 +11,7 @@ import { AuthenticationModule } from './authentication/authentication.module';
 import { dataSourceOpt } from './common/constant/datasource-opt.const';
 import { MailModule } from './mail/mail.module';
 import { mailerOpt } from './common/constant/mailer-opt-const';
+import { ApiConsumerModule } from './api-consumer/api-consumer.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { mailerOpt } from './common/constant/mailer-opt-const';
     UserModule,
     AuthenticationModule,
     MailModule,
+    ApiConsumerModule,
   ],
   controllers: [],
   providers: [],

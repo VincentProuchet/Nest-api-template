@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
@@ -18,6 +19,7 @@ import { UserGetDto } from '../user/dto/out/user-get.dto';
 import { AccessTokenDto } from '../authentication/dto/out/access-token.dto';
 import { StringEmailDto } from '../common/dto/string-email.dto';
 import { ResetPwdDto } from './dto/in/reset-password.dto';
+import { ApiConsumerService } from 'src/api-consumer/api-consumer.service';
 
 @ApiTags('auth')
 @AllowAnonymous()
@@ -25,7 +27,12 @@ import { ResetPwdDto } from './dto/in/reset-password.dto';
 export class AuthenticationController {
   private new_password_controler = 'new-password';
 
-  constructor(private readonly authService: AuthenticationService) {}
+  constructor(private readonly authService: AuthenticationService, private readonly apiConsumerService: ApiConsumerService) {}
+
+  @Get('/test')
+  async test(): Promise<void> {
+    await this.apiConsumerService.getUsers(10);
+  }
 
   @Post('/signUp')
   async signUp(@Body() userInfo: RegisterDto): Promise<UserGetDto> {
