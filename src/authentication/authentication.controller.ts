@@ -19,7 +19,7 @@ import { UserGetDto } from '../user/dto/out/user-get.dto';
 import { AccessTokenDto } from '../authentication/dto/out/access-token.dto';
 import { StringEmailDto } from '../common/dto/string-email.dto';
 import { ResetPwdDto } from './dto/in/reset-password.dto';
-import { ApiConsumerService } from 'src/api-consumer/api-consumer.service';
+import { ApiConsumerService } from '../api-consumer/api-consumer.service';
 
 @ApiTags('auth')
 @AllowAnonymous()
