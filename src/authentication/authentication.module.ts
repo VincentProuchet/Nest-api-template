@@ -6,10 +6,7 @@ import { AuthenticationController } from './authentication.controller';
 import { AuthenticationService } from './authentication.service';
 import { UserModule } from '../user/user.module';
 import { AuthenticationGuard } from './authentication.guard';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { MailModule } from '../mail/mail.module';
-
-
 
 @Module({
   imports: [
@@ -17,7 +14,7 @@ import { MailModule } from '../mail/mail.module';
     JwtModule.register({
       global: true,
     }),
-    MailModule
+    MailModule,
   ],
   controllers: [AuthenticationController],
   providers: [
@@ -28,4 +25,4 @@ import { MailModule } from '../mail/mail.module';
     },
   ],
 })
-export class AuthenticationModule { }
+export class AuthenticationModule {}

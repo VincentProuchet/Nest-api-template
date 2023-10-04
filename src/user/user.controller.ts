@@ -12,7 +12,13 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiConsumes, ApiResponse, ApiTags, ApiBody } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiConsumes,
+  ApiResponse,
+  ApiTags,
+  ApiBody,
+} from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 import { UserService } from './user.service';
@@ -75,7 +81,6 @@ export class UserController {
     return await this.userService.update(user);
   }
 
-
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
@@ -95,8 +100,10 @@ export class UserController {
   @HttpCode(HttpStatus.OK)
   @Post('/uploadAvatar')
   @UseInterceptors(FileInterceptor('file', multerImgOpt))
-  async uploadAvatar(@Req() req: any, @UploadedFile() file: Express.Multer.File): Promise<UserGetDto> {
+  async uploadAvatar(
+    @Req() req: any,
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<UserGetDto> {
     return await this.userService.updateUserAvatarUrl(file.path, req.user.sub);
   }
-
 }

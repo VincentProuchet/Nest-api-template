@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -13,7 +17,7 @@ export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private usersRepository: Repository<UserEntity>,
-  ) { }
+  ) {}
 
   async getAll(): Promise<UserGetDto[]> {
     const entities: UserEntity[] = await this.usersRepository.find();
@@ -61,8 +65,10 @@ export class UserService {
       email: userDto.email,
     });
     if (user) {
-      user.firstname = userDto.firstname === undefined ? user.firstname : userDto.firstname;
-      user.lastname = userDto.lastname === undefined ? user.lastname : userDto.lastname;
+      user.firstname =
+        userDto.firstname === undefined ? user.firstname : userDto.firstname;
+      user.lastname =
+        userDto.lastname === undefined ? user.lastname : userDto.lastname;
 
       await this.usersRepository.save(user);
 
@@ -72,8 +78,11 @@ export class UserService {
     }
   }
 
-  async updateUserAvatarUrl(imagePath: string, userId: number): Promise<UserGetDto> {
-    let user: UserEntity | null = await this.usersRepository.findOneBy({
+  async updateUserAvatarUrl(
+    imagePath: string,
+    userId: number,
+  ): Promise<UserGetDto> {
+    const user: UserEntity | null = await this.usersRepository.findOneBy({
       id: userId,
     });
     if (!user) {
@@ -81,8 +90,8 @@ export class UserService {
     }
 
     // We make sure the path has a correct format for browser url - useful on windows
-    const formatedPath: string = imagePath.replaceAll(/\\\\*/gm, "/");
-    const regexp: RegExp = /public\/\S*/g
+    const formatedPath: string = imagePath.replaceAll(/\\\\*/gm, '/');
+    const regexp: RegExp = /public\/\S*/g;
     const regexpResult: RegExpMatchArray | null = formatedPath.match(regexp);
     if (regexpResult) {
       user.avatarUrl = regexpResult[0].replace('public', '');
@@ -93,7 +102,7 @@ export class UserService {
   }
 
   async updatePassword(userDto: UserAuthDto, resetPwdToken?: string) {
-    let user: UserEntity | null = await this.usersRepository.findOneBy({
+    const user: UserEntity | null = await this.usersRepository.findOneBy({
       id: userDto.id,
     });
 
@@ -105,20 +114,18 @@ export class UserService {
     }
 
     user.password = userDto.password;
-    if (user.resetPwdToken)
-      user.resetPwdToken = undefined;
+    if (user.resetPwdToken) user.resetPwdToken = undefined;
 
     await this.usersRepository.save(user);
   }
   async updatePasswordToken(userId: number, token: string): Promise<boolean> {
-    let user: UserEntity | null = await this.usersRepository.findOneBy({
-      id: userId
+    const user: UserEntity | null = await this.usersRepository.findOneBy({
+      id: userId,
     });
     if (!user) return false;
     user.resetPwdToken = token;
     this.usersRepository.save(user);
     return true;
-
   }
 
   async getHashedPwdFromEmail(userEmail: string): Promise<UserAuthDto | null> {
@@ -127,5 +134,4 @@ export class UserService {
     });
     return userEntity ? new UserAuthDto(userEntity) : null;
   }
-
 }

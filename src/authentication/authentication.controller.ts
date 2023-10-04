@@ -1,5 +1,14 @@
-import { BadRequestException, Body, Controller, HttpCode, HttpStatus, Post, Req } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Req,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { Request } from 'express';
 
 import { AuthenticationService } from './authentication.service';
 import { RegisterDto } from './dto/in/register.dto';
@@ -9,16 +18,14 @@ import { UserGetDto } from '../user/dto/out/user-get.dto';
 import { AccessTokenDto } from '../authentication/dto/out/access-token.dto';
 import { StringEmailDto } from '../common/dto/string-email.dto';
 import { ResetPwdDto } from './dto/in/reset-password.dto';
-import { Request } from 'express';
 
 @ApiTags('auth')
 @AllowAnonymous()
 @Controller('auth')
 export class AuthenticationController {
+  private new_password_controler = 'new-password';
 
-  private new_password_controler = "new-password";
-
-  constructor(private readonly authService: AuthenticationService) { }
+  constructor(private readonly authService: AuthenticationService) {}
 
   @Post('/signUp')
   async signUp(@Body() userInfo: RegisterDto): Promise<UserGetDto> {
@@ -38,17 +45,24 @@ export class AuthenticationController {
    */
   @HttpCode(HttpStatus.OK)
   @Post('/forgotPwd')
-  async forgotPwd(@Body() stringEmailDto: StringEmailDto, @Req() request: Request): Promise<void> {
+  async forgotPwd(
+    @Body() stringEmailDto: StringEmailDto,
+    @Req() request: Request,
+  ): Promise<void> {
     const header = request.headers;
-    if (!header.origin) throw new BadRequestException("le headers n'a pas la forme correcte");
+    if (!header.origin)
+      throw new BadRequestException("le headers n'a pas la forme correcte");
 
-    await this.authService.sendForgotPwdEmail(stringEmailDto.email, header.origin, this.new_password_controler);
+    await this.authService.sendForgotPwdEmail(
+      stringEmailDto.email,
+      header.origin,
+      this.new_password_controler,
+    );
   }
 
   @HttpCode(HttpStatus.OK)
   @Post('/resetPwd')
-  async resetPwd(@Body() stringPwdDto: ResetPwdDto, @Req() request: Request): Promise<void> {
-    //request.headers.host;
+  async resetPwd(@Body() stringPwdDto: ResetPwdDto): Promise<void> {
     await this.authService.resetPassword(stringPwdDto);
   }
 }

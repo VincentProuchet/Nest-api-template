@@ -1,6 +1,10 @@
-import { BadRequestException, ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import bcrypt from "bcrypt";
+import bcrypt from 'bcrypt';
 
 import { RegisterDto } from './dto/in/register.dto';
 import { LoginDto } from './dto/in/login.dto';
@@ -17,26 +21,34 @@ export class AuthenticationService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
-    private readonly mailService: MailService
-  ) { }
+    private readonly mailService: MailService,
+  ) {}
 
   async register(registerDto: RegisterDto): Promise<UserGetDto> {
     if (await this.userService.getByEmail(registerDto.email)) {
       throw new ConflictException('Email already in use');
     }
-    registerDto.password = await bcrypt.hash(registerDto.password, await bcrypt.genSalt(10));
+    registerDto.password = await bcrypt.hash(
+      registerDto.password,
+      await bcrypt.genSalt(10),
+    );
 
     return await this.userService.create(registerDto);
   }
 
   async login(loginDto: LoginDto): Promise<AccessTokenDto> {
-    const foundUser: UserAuthDto | null = await this.userService.getHashedPwdFromEmail(
-      loginDto.email,
-    );
-    if (!foundUser || !await bcrypt.compare(loginDto.password, foundUser.password))
+    const foundUser: UserAuthDto | null =
+      await this.userService.getHashedPwdFromEmail(loginDto.email);
+    if (
+      !foundUser ||
+      !(await bcrypt.compare(loginDto.password, foundUser.password))
+    )
       throw new UnauthorizedException('Wrong email or password');
 
-    const payload: JwtPayloadDto = { userId: foundUser.id, userEmail: foundUser.email };
+    const payload: JwtPayloadDto = {
+      userId: foundUser.id,
+      userEmail: foundUser.email,
+    };
     const response: AccessTokenDto = {
       accessToken: await this.generateJWT(payload),
     };
@@ -44,14 +56,24 @@ export class AuthenticationService {
     return response;
   }
 
-  async sendForgotPwdEmail(userEmail: string, host: string, controler: string): Promise<void> {
-    const user: UserGetDto | null = await this.userService.getByEmail(userEmail);
+  async sendForgotPwdEmail(
+    userEmail: string,
+    host: string,
+    controler: string,
+  ): Promise<void> {
+    const user: UserGetDto | null =
+      await this.userService.getByEmail(userEmail);
     if (user) {
-      const payload: JwtPayloadDto = { userId: user.id, userEmail: user.email }
+      const payload: JwtPayloadDto = { userId: user.id, userEmail: user.email };
       const resetJWT: string = await this.generateJWT(payload, false);
 
       if (await this.userService.updatePasswordToken(user.id, resetJWT)) {
-        this.mailService.sendResetPassword(userEmail, resetJWT, host, controler);
+        this.mailService.sendResetPassword(
+          userEmail,
+          resetJWT,
+          host,
+          controler,
+        );
       }
     }
   }
@@ -63,23 +85,32 @@ export class AuthenticationService {
       payload = await this.jwtService.verifyAsync(resetPwdDto.token, {
         secret: process.env.JWT_SECRET_PWD_RESET,
       });
-    }
-    catch {
+    } catch {
       throw new UnauthorizedException('reset token is invalid');
     }
 
     const updatedUser: UserAuthDto = {
       id: payload.userId,
       email: payload.userEmail,
-      password: await bcrypt.hash(resetPwdDto.password, await bcrypt.genSalt(10))
-    }
+      password: await bcrypt.hash(
+        resetPwdDto.password,
+        await bcrypt.genSalt(10),
+      ),
+    };
     await this.userService.updatePassword(updatedUser, resetPwdDto.token);
   }
 
-  private async generateJWT(payload: JwtPayloadDto, isAuth: boolean = true): Promise<string> {
+  private async generateJWT(
+    payload: JwtPayloadDto,
+    isAuth: boolean = true,
+  ): Promise<string> {
     return await this.jwtService.signAsync(payload, {
-      secret: isAuth ? process.env.JWT_SECRET_AUTH : process.env.JWT_SECRET_PWD_RESET,
-      expiresIn: isAuth ? process.env.JWT_EXPIRE_AUTH : process.env.JWT_EXPIRE_PWD_RESET,
-    })
+      secret: isAuth
+        ? process.env.JWT_SECRET_AUTH
+        : process.env.JWT_SECRET_PWD_RESET,
+      expiresIn: isAuth
+        ? process.env.JWT_EXPIRE_AUTH
+        : process.env.JWT_EXPIRE_PWD_RESET,
+    });
   }
 }
