@@ -15,10 +15,9 @@ export const mailerOpt: MailerOptions = {
       user: process.env.MAIL_SMTP_USER,
       pass: process.env.MAIL_SMTP_PASSWORD,
     },
-
-    secure: process.env.NODE_ENV == NodeEnvEnum.production ? false : true,
-    logger: process.env.NODE_ENV == NodeEnvEnum.production ? true : false,
-    debug: process.env.NODE_ENV == NodeEnvEnum.production ? true : false,
+    secure: process.env.NODE_ENV == NodeEnvEnum.production ? true : false,
+    logger: process.env.NODE_ENV == NodeEnvEnum.production ? false : true,
+    debug: process.env.NODE_ENV == NodeEnvEnum.production ? false : true,
 
   },
   defaults: {

@@ -32,18 +32,17 @@ export class AuthenticationController {
   }
   /**
    * controleur pour démarrer la procedure de ré-initialisation de mot de passe
-   * l'utilisateur ne doit fournir que un email 
-   * @param stringEmailDto 
+   * l'utilisateur ne doit fournir que un email
+   * @param stringEmailDto
    * @param request
    */
   @HttpCode(HttpStatus.OK)
   @Post('/forgotPwd')
   async forgotPwd(@Body() stringEmailDto: StringEmailDto, @Req() request: Request): Promise<void> {
     const header = request.headers;
-    console.log(header);
-    if (!header.referer) throw new BadRequestException("le headers n'a pas la forme correcte");
+    if (!header.origin) throw new BadRequestException("le headers n'a pas la forme correcte");
 
-    await this.authService.sendForgotPwdEmail(stringEmailDto.email, header.referer, this.new_password_controler);
+    await this.authService.sendForgotPwdEmail(stringEmailDto.email, header.origin, this.new_password_controler);
   }
 
   @HttpCode(HttpStatus.OK)
