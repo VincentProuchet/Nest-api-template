@@ -1,45 +1,43 @@
 import { MailerOptions } from "@nestjs-modules/mailer";
 import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter";
 import { join } from "path";
+import { nodeEnvEnum } from "./enums/node-env.enum";
 /**
  * configuration mailer 
  * 
  */
 export const mailerOpt: MailerOptions = {
   transport: {
+    className: process.env.MAIL_DRIVER,
     host: process.env.MAIL_SMTP_HOST,
     port: process.env.MAIL_SMTP_PORT,
-    ignoreTLS: process.env.MAIL_IGNORETLS ? true : false,
-    secure: process.env.MAIL_SECURE ? true : false,
+    auth: {
+      user: process.env.MAIL_SMTP_USER,
+      pass: process.env.MAIL_SMTP_PASSWORD,
+    },
 
-    ...(
-      mailerOptAuth()
-    ),
+    secure: process.env.NODE_ENV == nodeEnvEnum.development ? false : true,
+    logger: process.env.NODE_ENV == nodeEnvEnum.development ? true : false,
+    debug: process.env.NODE_ENV == nodeEnvEnum.development ? true : false,
 
   },
   defaults: {
-    from: `"nest-modules" <${process.env.MAIL_ACCOUNT_SENDER!}>`,
+    from: `nest-modules<${process.env.MAIL_ACCOUNT_SENDER!}>`,
   },
-  preview: process.env.MAIL_PREVIEW ? true : false,
   template: {
+
     dir: join(__dirname, '..', '..', `${process.env.MAIL_TEMPLATE_DIRECTORY}`),
     adapter: new HandlebarsAdapter(),
     options: {
       strict: true,
     },
+
+  }, options: {
+    partials: {
+      dir: join(__dirname, '..', '..', `${process.env.MAIL_TEMPLATE_DIRECTORY}`, `${process.env.MAIL_PARTIAL_DIRECTORY}`),
+      options: {
+        strict: true,
+      },
+    },
   },
 };
-
-
-function mailerOptAuth() {
-  if (process.env.MAIL_SECURE) {
-
-    return {
-      auth: {
-        user: process.env.MAIL_SMTP_USER,
-        pass: process.env.MAIL_SMTP_PASSWORD,
-      }
-    };
-  }
-  return;
-}

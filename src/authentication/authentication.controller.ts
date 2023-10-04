@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, Req } from '@nestjs/common';
+import { BadRequestException, Body, Controller, HttpCode, HttpStatus, Post, Req } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { AuthenticationService } from './authentication.service';
@@ -15,6 +15,9 @@ import { Request } from 'express';
 @AllowAnonymous()
 @Controller('auth')
 export class AuthenticationController {
+
+  private new_password_controler = "new-password";
+
   constructor(private readonly authService: AuthenticationService) { }
 
   @Post('/signUp')
@@ -27,17 +30,26 @@ export class AuthenticationController {
   async signIn(@Body() userInfo: LoginDto): Promise<AccessTokenDto> {
     return await this.authService.login(userInfo);
   }
-
+  /**
+   * controleur pour démarrer la procedure de ré-initialisation de mot de passe
+   * l'utilisateur ne doit fournir que un email 
+   * @param stringEmailDto 
+   * @param request
+   */
   @HttpCode(HttpStatus.OK)
   @Post('/forgotPwd')
-  async forgotPwd(@Body() stringEmailDto: StringEmailDto): Promise<void> {
-    await this.authService.sendForgotPwdEmail(stringEmailDto.email);
+  async forgotPwd(@Body() stringEmailDto: StringEmailDto, @Req() request: Request): Promise<void> {
+    const header = request.headers;
+    console.log(header);
+    if (!header.referer) throw new BadRequestException("le headers n'a pas la forme correcte");
+
+    await this.authService.sendForgotPwdEmail(stringEmailDto.email, header.referer, this.new_password_controler);
   }
 
   @HttpCode(HttpStatus.OK)
   @Post('/resetPwd')
   async resetPwd(@Body() stringPwdDto: ResetPwdDto, @Req() request: Request): Promise<void> {
-    request.headers.host;
+    //request.headers.host;
     await this.authService.resetPassword(stringPwdDto);
   }
 }
