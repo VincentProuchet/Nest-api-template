@@ -30,8 +30,8 @@ export class AuthenticationController {
   constructor(private readonly authService: AuthenticationService, private readonly apiConsumerService: ApiConsumerService) {}
 
   @Get('/test')
-  async test(): Promise<void> {
-    await this.apiConsumerService.getUsers(10);
+  async test(): Promise<any> {
+    return await this.apiConsumerService.getUsers(10);
   }
 
   @Post('/signUp')

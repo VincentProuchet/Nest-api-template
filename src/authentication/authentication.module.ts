@@ -7,7 +7,7 @@ import { AuthenticationService } from './authentication.service';
 import { UserModule } from '../user/user.module';
 import { AuthenticationGuard } from './authentication.guard';
 import { MailModule } from '../mail/mail.module';
-import { ApiConsumerModule } from 'src/api-consumer/api-consumer.module';
+import { ApiConsumerModule } from '../api-consumer/api-consumer.module';
 
 @Module({
   imports: [

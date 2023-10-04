@@ -1,8 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
-import { AxiosError } from 'axios';
 import { join } from 'path';
-import { catchError, firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class ApiConsumerService {
@@ -12,27 +10,8 @@ export class ApiConsumerService {
   constructor(private readonly httpService: HttpService) {
   }
 
-  async getUsers(usersNumber: number) {
-    const { data } = await firstValueFrom(
-      this.httpService.get<any>(join(this.baseUrl, "users", `?${this.responseType}&number=${usersNumber}`)).pipe(
-        catchError((error: AxiosError) => {
-          console.log(error.response?.data);
-          throw 'An error happened!';
-        }),
-      ),
-    );
-    // const responseJson = this.httpService.get(join(this.baseUrl, "users", `?${this.responseType}&number=${usersNumber}`)).subscribe({
-    //   next: () => {
-
-    //   },
-    //   error: () => {
-
-    //   },
-    //   complete: () => {
-
-    //   }
-    // });
-    console.log(data);
+  async getUsers(usersNumber: number): Promise<any> {
+    const response = await this.httpService.axiosRef.get(join(this.baseUrl, "users", `?${this.responseType}&number=${usersNumber}`));
+    return response.data;
   }
-
 }
