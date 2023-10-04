@@ -1,4 +1,5 @@
 import { UserEntity } from '../../user/entities/user.entity';
+import { NodeEnvEnum } from './enums/node-env.enum';
 
 const migrationsArray =
   process.env.TYPEORM_USE_CLI === 'true'
@@ -13,7 +14,7 @@ export const dataSourceOpt = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   charset: 'utf8mb4',
-  synchronize: process.env.NODE_ENV === 'development' ? true : false,
+  synchronize: process.env.NODE_ENV === NodeEnvEnum.production ? true : false,
   debug: false,
   migrations: migrationsArray,
   migrationsTableName: 'migrations_history',

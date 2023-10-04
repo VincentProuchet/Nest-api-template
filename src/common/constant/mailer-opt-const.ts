@@ -1,10 +1,10 @@
 import { MailerOptions } from "@nestjs-modules/mailer";
 import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter";
 import { join } from "path";
-import { nodeEnvEnum } from "./enums/node-env.enum";
+import { NodeEnvEnum } from "./enums/node-env.enum";
 /**
- * configuration mailer 
- * 
+ * configuration mailer
+ *
  */
 export const mailerOpt: MailerOptions = {
   transport: {
@@ -16,9 +16,9 @@ export const mailerOpt: MailerOptions = {
       pass: process.env.MAIL_SMTP_PASSWORD,
     },
 
-    secure: process.env.NODE_ENV == nodeEnvEnum.development ? false : true,
-    logger: process.env.NODE_ENV == nodeEnvEnum.development ? true : false,
-    debug: process.env.NODE_ENV == nodeEnvEnum.development ? true : false,
+    secure: process.env.NODE_ENV == NodeEnvEnum.production ? false : true,
+    logger: process.env.NODE_ENV == NodeEnvEnum.production ? true : false,
+    debug: process.env.NODE_ENV == NodeEnvEnum.production ? true : false,
 
   },
   defaults: {
