@@ -59,7 +59,7 @@ export class AuthenticationService {
   async sendForgotPwdEmail(
     userEmail: string,
     host: string,
-    controler: string,
+    controller: string,
   ): Promise<void> {
     const user: UserGetDto | null =
       await this.userService.getByEmail(userEmail);
@@ -72,7 +72,7 @@ export class AuthenticationService {
           userEmail,
           resetJWT,
           host,
-          controler,
+          controller,
         );
       }
     }

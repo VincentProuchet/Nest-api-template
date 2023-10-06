@@ -13,13 +13,13 @@ export class MailService {
    * @param email envoyé à
    * @param token jeton de réinitialisation
    * @param host adresse de la page au front-end
-   * @param controler controler du front-end
+   * @param controller controler du front-end
    */
   public sendResetPassword(
     email: string,
     token: string,
     host: string,
-    controler: string,
+    controller: string,
   ) {
     this.mailerService
       .sendMail({
@@ -30,7 +30,7 @@ export class MailService {
         encoding: 'utf-8',
         context: {
           host,
-          controler,
+          controller,
           email,
           token,
         },
