@@ -8,10 +8,10 @@ interface IUserGetDto {
 
 export class UserGetDto {
   id: number;
-  email: string;
-  firstname: string | null;
-  lastname: string | null;
-  avatarUrl: string | null;
+  email?: string;
+  firstname?: string | null;
+  lastname?: string | null;
+  avatarUrl?: string | null;
 
   constructor(data?: IUserGetDto) {
     if (data) {
