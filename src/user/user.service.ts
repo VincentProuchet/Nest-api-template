@@ -17,7 +17,7 @@ export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private usersRepository: Repository<UserEntity>,
-  ) {}
+  ) { }
 
   async getAll(): Promise<UserGetDto[]> {
     const entities: UserEntity[] = await this.usersRepository.find();
@@ -114,7 +114,7 @@ export class UserService {
     }
 
     user.password = userDto.password;
-    if (user.resetPwdToken) user.resetPwdToken = undefined;
+    user.resetPwdToken = null;
 
     await this.usersRepository.save(user);
   }

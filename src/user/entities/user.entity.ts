@@ -19,15 +19,15 @@ export class UserEntity {
 
   /** prénom */
   @Column({ type: 'varchar', length: 64, nullable: true })
-  firstname?: string;
+  firstname: string | null;
 
   /** nom */
   @Column({ type: 'varchar', length: 64, nullable: true })
-  lastname?: string;
+  lastname: string | null;
 
   @Column({ name: 'avatar_url', type: 'varchar', nullable: true })
-  avatarUrl?: string;
+  avatarUrl: string | null;
 
   @Column({ name: 'reset_password_token', type: 'varchar', nullable: true })
-  resetPwdToken?: string;
+  resetPwdToken: string | null;
 }

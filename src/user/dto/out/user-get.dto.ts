@@ -1,17 +1,17 @@
 interface IUserGetDto {
   id: number;
   email: string;
-  firstname?: string;
-  lastname?: string;
-  avatarUrl?: string;
+  firstname: string | null;
+  lastname: string | null;
+  avatarUrl: string | null;
 }
 
 export class UserGetDto {
   id: number;
   email: string;
-  firstname?: string;
-  lastname?: string;
-  avatarUrl?: string;
+  firstname: string | null;
+  lastname: string | null;
+  avatarUrl: string | null;
 
   constructor(data?: IUserGetDto) {
     if (data) {
