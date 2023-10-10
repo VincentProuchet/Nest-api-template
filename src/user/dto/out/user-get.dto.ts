@@ -1,14 +1,14 @@
 interface IUserGetDto {
   id: number;
   email: string;
-  firstname: string | null;
-  lastname: string | null;
-  avatarUrl: string | null;
+  firstname?: string | null;
+  lastname?: string | null;
+  avatarUrl?: string | null;
 }
 
 export class UserGetDto {
   id: number;
-  email?: string;
+  email: string;
   firstname?: string | null;
   lastname?: string | null;
   avatarUrl?: string | null;
