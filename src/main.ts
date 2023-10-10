@@ -29,7 +29,9 @@ async function bootstrapApp() {
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('swagger', app, swaggerDocument);
 
-  await app.listen(process.env.PORT_LISTEN ?? 3003);
+  await app.listen(process.env.PORT || (process.env.PORT_LISTEN ?? 3003));
+  // PORT est utilisé par la plateform Render pour injecter le port assigné du server
+  // les suivants la variable du .env ou et finalement le défaut une valeur hardcoded
 
   console.log(process.env.NODE_ENV);
 }
